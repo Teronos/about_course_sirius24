@@ -13,7 +13,7 @@
 """
 
 
-def task5():
+def task5() -> None:
     a = int(input('Введите первое число: '))
     b = int(input('Введите второе число: '))
     k = b
@@ -36,18 +36,13 @@ CATA
 """
 
 
-def task5_1():
+def task5_1() -> None:
     n = input('Введите цепочку ДНК: ')
     res = ''
+    change = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
     for i in n:
-        if i == 'A':
-            res += 'T'
-        elif i == 'T':
-            res += 'A'
-        elif i == 'C':
-            res += 'G'
-        elif i == 'G':
-            res += 'C'
+        if i in change.keys():
+            res += change[i]
         else:
             res += i
     print('Результат:', res)
@@ -66,7 +61,7 @@ def task5_1():
 """
 
 
-def task5_p():
+def task5_p() -> None:
     n = int(input('Введите число: '))
     k = 1
     print('Результат:', end=' ')

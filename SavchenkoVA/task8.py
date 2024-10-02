@@ -12,12 +12,15 @@
 """
 
 
-def task8():
+def task8() -> None:
     n, m = input('Введите два числа: ').split(' ')
+    ch = list()
     print('Результат:', end=' ')
     for i in n:
         if i in m:
-            print(i, end=' ')
+            if not (i in ch):
+                ch.append(i)
+                print(i, end=' ')
     print()
 
 
@@ -37,7 +40,7 @@ array = [ [1,2,3], [8,9,4], [7,6,5] ] my_sort(array) #=> [1,2,3,4,5,6,7,8,9]
 """
 
 
-def my_sort(array):
+def my_sort(array: list) -> list:
     result = list()
     start_rows = 0
     start_columns = 0
@@ -61,7 +64,7 @@ def my_sort(array):
     return result
 
 
-def task8_p():
+def task8_p() -> None:
     array1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     print('Результат сортировки массива:', array1, '=', my_sort(array1))
     array2 = [[1, 2, 3], [8, 9, 4], [7, 6, 5]]

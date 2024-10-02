@@ -10,7 +10,7 @@
 """
 
 
-def task1():
+def task1() -> None:
     n = input('Введите число: ')
     sum_n = 0
     for i in n:
@@ -30,7 +30,7 @@ def task1():
 """
 
 
-def task1_p():
+def task1_p() -> None:
     n = input('Введите число: ')
     sum_n = 1
     for i in n:

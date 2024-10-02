@@ -10,10 +10,9 @@
 """
 
 
-def task2():
+def task2() -> None:
     n = input('Введите число: ')
-    new_n = n[::-1]
-    print('Результат:', new_n)
+    print('Результат:', n[::-1])
 
 
 """
@@ -29,7 +28,7 @@ def task2():
 """
 
 
-def task2_p():
+def task2_p() -> None:
     n = input('Введите число: ')
     sum_ch = 0
     sum_nch = 0

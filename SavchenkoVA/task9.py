@@ -1,4 +1,5 @@
 import math
+from numbers import Number
 
 """
 Задача 9:
@@ -13,15 +14,15 @@ import math
 
 
 class Point:
-    def __init__(self):
+    def __init__(self) -> None:
         self.y = None
         self.x = None
 
-    def set_coordinates(self, x, y):
+    def set_coordinates(self, x: Number, y: Number) -> None:
         self.x = x
         self.y = y
 
-    def get_distance(self, point):
+    def get_distance(self, point) -> [None, Number]:
         if type(point) != Point:
             print('Передана не точка')
             return None
@@ -29,7 +30,7 @@ class Point:
         return distance
 
 
-def task9():
+def task9() -> None:
     p1 = Point()
     p2 = Point()
     p1.set_coordinates(1, 2)
@@ -52,19 +53,19 @@ def task9():
 
 
 class Person:
-    def __init__(self, first_name, last_name, age):
+    def __init__(self, first_name: str, last_name: str, age: Number) -> None:
         self.first_name = first_name
         self.last_name = last_name
         self.age = age
 
-    def full_name(self):
+    def full_name(self) -> str:
         return self.last_name + ' ' + self.first_name
 
-    def is_adult(self):
+    def is_adult(self) -> bool:
         return self.age >= 18
 
 
-def task9_1():
+def task9_1() -> None:
     p1 = Person('Nik', 'Abaturov', 14)
     p2 = Person('Nika', 'Savchenko', 24)
     print('Персона', p1.full_name(), 'является совершеннолетней:', p1.is_adult())
@@ -83,16 +84,16 @@ def task9_1():
 
 
 class Laptop:
-    def __init__(self, brand, model, price):
+    def __init__(self, brand: str, model: str, price: Number) -> None:
         self.brand = brand
         self.model = model
         self.price = price
         self._laptop_name = brand + ' ' + model
 
-    def laptop_name(self):
+    def laptop_name(self) -> str:
         return self._laptop_name
 
-def task9_p():
+def task9_p() -> None:
     hp = Laptop('hp', '15-bw0xx', 57000)
     print('Результат созданного класса:')
     print('Стоимость:', hp.price)

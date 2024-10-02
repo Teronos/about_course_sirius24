@@ -13,7 +13,7 @@
 """
 
 
-def task7():
+def task7() -> None:
     n = int(input('Введите количество чисел: '))
     k = list(map(int, input('Введите последовательность чисел: ').split(' ')))
     sum_k = 0
@@ -40,7 +40,7 @@ def task7():
 """
 
 
-def task7_p():
+def task7_p() -> None:
     n = int(input('Введите число: '))
     max_n = n
     k = 1 if n != 0 else 0

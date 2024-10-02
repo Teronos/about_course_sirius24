@@ -16,7 +16,7 @@
 """
 
 
-def task3():
+def task3() -> None:
     n = int(input('Введите количество чисел: '))
     k = 0
     for i in range(n):
@@ -44,7 +44,7 @@ def task3():
 """
 
 
-def task3_p():
+def task3_p() -> None:
     n = int(input('Введите количество чисел: '))
     k = 0
     sum_m = 0

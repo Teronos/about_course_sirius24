@@ -14,7 +14,7 @@
 """
 
 
-def task4():
+def task4() -> None:
     n = int(input('Введите количество чисел: '))
     k = 1
     m = int(input('Введите число: '))
@@ -42,7 +42,7 @@ def task4():
 """
 
 
-def task4_p():
+def task4_p() -> None:
     a = int(input('Введите число: '))
     x = 0
     y = 1

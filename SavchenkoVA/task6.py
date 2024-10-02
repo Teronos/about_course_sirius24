@@ -16,7 +16,7 @@
 """
 
 
-def task6():
+def task6() -> None:
     n = int(input('Введите количество чисел: '))
     k = list()
     for i in range(n):
@@ -43,7 +43,7 @@ def task6():
 """
 
 
-def task6_p():
+def task6_p() -> None:
     n = int(input('Введите количество чисел: '))
     k = 0
     for i in range(n):
