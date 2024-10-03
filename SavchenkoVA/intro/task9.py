@@ -14,9 +14,8 @@ from numbers import Number
 
 
 class Point:
-    def __init__(self) -> None:
-        self.y = None
-        self.x = None
+    y: Number
+    x: Number
 
     def set_coordinates(self, x: Number, y: Number) -> None:
         self.x = x
@@ -53,6 +52,10 @@ def task9() -> None:
 
 
 class Person:
+    first_name: str
+    last_name: str
+    age: Number
+
     def __init__(self, first_name: str, last_name: str, age: Number) -> None:
         self.first_name = first_name
         self.last_name = last_name
@@ -84,14 +87,19 @@ def task9_1() -> None:
 
 
 class Laptop:
+    brand: str
+    model: str
+    price: Number
+    __laptop_name: str
+
     def __init__(self, brand: str, model: str, price: Number) -> None:
         self.brand = brand
         self.model = model
         self.price = price
-        self._laptop_name = brand + ' ' + model
+        self.__laptop_name = brand + ' ' + model
 
     def laptop_name(self) -> str:
-        return self._laptop_name
+        return self.__laptop_name
 
 def task9_p() -> None:
     hp = Laptop('hp', '15-bw0xx', 57000)
