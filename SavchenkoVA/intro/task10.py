@@ -79,7 +79,7 @@ class Director:
         self.promise = Promise(salary)
 
     def check_promises(self) -> bool:
-        return self.salary == self.promise.promise
+        return self.salary >= self.promise.promise
 
 
 class Employee:
@@ -153,12 +153,12 @@ def task10_p() -> None:
     vk.fulfill_promise()
 
     director = vk.director()
-    director.check_promises()  # true
+    print("director.check_promises:", director.check_promises())  # true
 
     vk.set_profit(-200)
     vk.fulfill_promise()
 
-    director.check_promises()  # false
+    print("director.check_promises:", director.check_promises())  # false
 
 
 if __name__ == "__main__":
