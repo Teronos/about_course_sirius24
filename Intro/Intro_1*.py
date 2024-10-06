@@ -14,7 +14,7 @@ if a.isnumeric():
         print ("Введено НЕ пятизначное число!")
     else:
         b=int(a)
-        c=0
+        c=1
         while b != 0:
             c*=b%10
             b //= 10
