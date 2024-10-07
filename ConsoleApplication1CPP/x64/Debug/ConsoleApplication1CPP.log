@@ -1,0 +1,21 @@
+﻿  AbstractTask.cpp
+  ArrayTask.cpp
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\NumberVect.cpp(27,20): warning C4244: return: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "ArrayTask.cpp")
+  
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\ArrayTask.cpp(51,20): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\ArrayTask.cpp(388,32): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+  ConsoleApplication1CPP.cpp
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\NumberVect.cpp(27,20): warning C4244: return: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "ConsoleApplication1CPP.cpp")
+  
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\ArrayTask.cpp(51,20): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  (компиляция исходного файла "ConsoleApplication1CPP.cpp")
+  
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\ArrayTask.cpp(388,32): warning C4244: инициализация: преобразование "double" в "int", возможна потеря данных
+  (компиляция исходного файла "ConsoleApplication1CPP.cpp")
+  
+  NumberVect.cpp
+C:\Users\User\source\repos\ConsoleApplication1CPP\ConsoleApplication1CPP\NumberVect.cpp(27,20): warning C4244: return: преобразование "double" в "int", возможна потеря данных
+  Создание кода...
+  ConsoleApplication1CPP.vcxproj -> C:\Users\User\source\repos\ConsoleApplication1CPP\x64\Debug\ConsoleApplication1CPP.exe
