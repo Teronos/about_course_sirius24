@@ -12,18 +12,18 @@ from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QSli
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 
-
+# типы переменным и многопоточность, лэйблу size добавить коэфицент сжатия
 class ImageCompressor(QMainWindow):
     def __init__(self):
         super().__init__()
         self.path = pathlib.Path.cwd()
         uic.loadUi(self.path / r"ff.ui", self)
-        self.file_name = None
+        self.file_Path:str = None
         self.compressed_image = None
 
         # UI elements
         self.label = self.findChild(QLabel, "labels")
-
+        self.size = self.findChild(QLabel, "size")
         self.sliderR = self.findChild(QSlider, "sliderR")
         self.sliderR.setMinimum(1)
         self.sliderR.setMaximum(100)
@@ -50,22 +50,27 @@ class ImageCompressor(QMainWindow):
         self.save_button.setEnabled(False)
 
 
-
     def load_image(self):
         options = QFileDialog.Options()
-        self.file_name, _ = QFileDialog.getOpenFileName(self, "Load Image", "", "Image Files (*.png *.jpg *.bmp)",
-                                                   options=options)
-        self.file_extension = os.path.splitext(self.file_name)[1]
-        print(self.file_name)
-        if self.file_name:
+        self.file_Path, _ = QFileDialog.getOpenFileName(self, "Load Image", "", "Image Files (*.png *.jpg *.bmp)",
+                                                        options=options)
+        self.file_extension = os.path.splitext(self.file_Path)[1]
+        self.Temp_size = os.path.getsize(self.file_Path)
+        print(self.file_Path)
+        if self.file_Path:
             self.update_image()
 
     def update_image(self):
-        if self.file_name is not None:
-            compression_factor = [self.sliderR.value(), self.sliderG.value(), self.sliderB.value()]
-            self.compressed_image = MGK.compress_image_pca(self.file_name, compression_factor)
-            self.show_image(self.compressed_image)
-            self.save_button.setEnabled(True)
+        if self.file_Path is None:
+            print("Non name")
+            return
+        compression_factor = [self.sliderR.value(), self.sliderG.value(), self.sliderB.value()]
+        self.compressed_image = MGK.compress_image_pca(self.file_Path, compression_factor)
+        self.compressed_image.save(os.getcwd() +"/temp"+self.file_extension)
+        file_size = os.path.getsize(os.getcwd()+"/temp"+self.file_extension)/self.Temp_size
+        self.size.setText(str(round(file_size, 1)))
+        self.show_image(self.compressed_image)
+        self.save_button.setEnabled(True)
 
     def show_image(self, image):
         # Конвертирование изображения из BGR в RGB
