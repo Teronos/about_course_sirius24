@@ -1,8 +1,10 @@
-# array = [ [1,2,3], [4,5,6], [7,8,9] ]
-array = [ [1,2,3,1], [4,5,6,4], [7,8,9,7], [7,8,9,7]]
+from typing import List
+
+array = [ [1,2,3], [4,5,6], [7,8,9] ]
+# array = [ [1,2,3,1], [4,5,6,4], [7,8,9,7], [7,8,9,7]]
 
 
-def funk (matrix):
+def funk (matrix: List[List[int]]) -> List[int]:
     result = []
     while matrix:
         

@@ -1,6 +1,14 @@
 
 class Notebook:
-    def __init__(self, brand, model, price):
+
+    # переменные
+    brand: str
+    model: str
+    price: float
+    laptop_name: str
+
+
+    def __init__(self, brand: str, model: str, price: float) -> None:
         self.brand = brand
         self.model = model
         self.price = price
@@ -9,11 +17,11 @@ class Notebook:
 
 
 
-    def full_name(self):
-        return str(f"{self.first_name} {self.last_name}")
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}"
     
 
-    def get_laptop_name(self):
+    def get_laptop_name(self) -> str:
         return self.laptop_name
 
 
