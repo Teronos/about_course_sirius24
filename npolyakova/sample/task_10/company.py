@@ -10,11 +10,11 @@ class Company:
     director: Director
     employees: list[Employee] = list()
 
-    def __init__(self, name, profit):
+    def __init__(self, name: str, profit: float):
         self.name = name
         self.profit = profit
 
-    def set_director(self, director):
+    def set_director(self, director: Director):
         self.director = director
 
     def add_employee(self, employee):
@@ -47,4 +47,3 @@ class Company:
                 print("Your budget is run out!")
                 exit(0)
         print("Paid: " + str(paidSum))
-

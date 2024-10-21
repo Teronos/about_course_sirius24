@@ -8,9 +8,8 @@ class Employee:
     surname: str
     promise: Promise
 
-    def __init__(self, id, name, surname, promise):
+    def __init__(self, id: int, name: str, surname: str, promise: float):
         self.id = id
         self.name = name
         self.surname = surname
         self.promise = Promise(promise)
-
