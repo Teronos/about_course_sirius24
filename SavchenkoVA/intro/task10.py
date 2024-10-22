@@ -54,32 +54,19 @@ def task10() -> None:
 согласно Promise каждого сотрудника компании.
 У всех работников компании есть контракт с компанией о размере его заработной плате – Promise,
 а также есть имена, фамилии и номера СНИЛС(Id)
+
+Замечание: метод set_profit устанавливает прибыль для компании.
+Компания в свою очередь, пытается выплатить заработную плату всем сотрудникам компании методом fulfill_promise.
+Если баланса компании хватает на выплаты всем участникам компании, то fulfill_promise возвращает true,
+в противном случае false.
 """
 
 
 class Promise:
-    promise: Number
+    promise: bool
 
-    def __init__(self, promise: Number) -> None:
+    def __init__(self, promise: bool = True) -> None:
         self.promise = promise
-
-
-class Director:
-    second_name: str
-    first_name: str
-    Id: int
-    salary: Number
-    promise: Promise
-
-    def __init__(self, first_name: str, second_name: str, Id: int, salary: Number) -> None:
-        self.second_name = second_name
-        self.first_name = first_name
-        self.Id = Id
-        self.salary = salary
-        self.promise = Promise(salary)
-
-    def check_promises(self) -> bool:
-        return self.salary >= self.promise.promise
 
 
 class Employee:
@@ -94,7 +81,25 @@ class Employee:
         self.first_name = first_name
         self.Id = Id
         self.salary = salary
-        self.promise = Promise(salary)
+        self.promise = Promise()
+
+    def print(self) -> str:
+        return self.second_name + ' ' + self.first_name
+
+    def print_info(self) -> None:
+        print('Работник', str(self.Id) + ':', self.second_name + ' ' + self.first_name)
+        print('Зарплата: ', self.salary)
+        print('Promise: ', self.promise)
+
+
+class Director(Employee):
+    def check_promises(self) -> bool:
+        return self.promise.promise
+
+    def print_info(self) -> None:
+        print('Директор', str(self.Id) + ':', self.second_name + ' ' + self.first_name)
+        print('Зарплата: ', self.salary)
+        print('Promise: ', self.promise)
 
 
 class Company:
@@ -104,8 +109,21 @@ class Company:
 
     def __init__(self, balance: Number = 0) -> None:
         self.balance = balance
-        self.__director = Director('', '', 0, 0)
+        self.__director = None
         self.__employees = list()
+
+    def print(self) -> str:
+        res = "\nbalance: " + str(self.balance) + '\nDirection: '
+        if self.__director is None:
+            res += 'None'
+        else:
+            res += self.__director.print()
+        if len(self.__employees) != 0:
+            res += '\nEmployees:'
+            for i in self.__employees:
+                res += '\n' + i.print()
+        res += '\n'
+        return res
 
     def create_director(self, first_name: str = '', second_name: str = '', Id: int = 0, salary: Number = 0) -> None:
         self.__director = Director(first_name, second_name, Id, salary)
@@ -114,13 +132,20 @@ class Company:
         employee = Employee(first_name, second_name, Id, salary)
         self.__employees.append(employee)
 
-    def set_profit(self, profit: Number) -> None:
-        self.__director.salary = profit
-        for i in range(len(self.__employees)):
-            self.__employees[i].salary = profit
+    def set_profit(self, profit: float) -> None:
+        self.balance += profit
 
-    def fulfill_promise(self) -> None:
-        pass
+    def fulfill_promise(self) -> bool:
+        res = self.__director.salary
+        if res > self.balance:
+            self.__director.promise.promise = False
+            return False
+        for i in range(len(self.__employees)):
+            res += self.__employees[i].salary
+            if res > self.balance:
+                self.__employees[i].promise.promise = False
+                return False
+        return True
 
     def director(self) -> Director:
         return self.__director
@@ -128,37 +153,37 @@ class Company:
 
 def task10_p() -> None:
     vk = Company(balance=50)
+    print("Create company:", vk.print())
     vk.create_director(
         first_name="Владимир",
         second_name="Кириенко",
         Id=1,
         salary=15
     )
-
+    print("Create director:", vk.print())
     vk.create_employee(
         first_name="Елена",
         second_name="Иванова",
         Id=2,
         salary=8
     )
-
+    print("Create employee 1:", vk.print())
     vk.create_employee(
         first_name="Виктор",
         second_name="Кузнецов",
         Id=3,
         salary=6
     )
-
+    print("Create employee 2:", vk.print())
     vk.set_profit(145.12)
-    vk.fulfill_promise()
-
+    print("set profit = 145.12:", vk.print())
+    print("fulfill promise:", vk.fulfill_promise())
     director = vk.director()
-    print("director.check_promises:", director.check_promises())  # true
-
+    print("director check promises:", director.check_promises())  # true
     vk.set_profit(-200)
-    vk.fulfill_promise()
-
-    print("director.check_promises:", director.check_promises())  # false
+    print("set profit = -200:", vk.print())
+    print("fulfill promise:", vk.fulfill_promise())
+    print("director check promises:", director.check_promises())  # false
 
 
 if __name__ == "__main__":
