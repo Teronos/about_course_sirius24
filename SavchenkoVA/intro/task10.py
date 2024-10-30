@@ -84,12 +84,15 @@ class Employee:
         self.promise = Promise()
 
     def print(self) -> str:
-        return self.second_name + ' ' + self.first_name
+        return f'{self.second_name} {self.first_name}'
 
-    def print_info(self) -> None:
-        print('Работник', str(self.Id) + ':', self.second_name + ' ' + self.first_name)
+    def _basic_print_info(self, status: str='Работник') -> None:
+        print(f'{status} {self.Id}: {self.second_name} {self.first_name}')
         print('Зарплата: ', self.salary)
         print('Promise: ', self.promise)
+
+    def print_info(self) -> None:
+        self._basic_print_info()
 
 
 class Director(Employee):
@@ -97,9 +100,7 @@ class Director(Employee):
         return self.promise.promise
 
     def print_info(self) -> None:
-        print('Директор', str(self.Id) + ':', self.second_name + ' ' + self.first_name)
-        print('Зарплата: ', self.salary)
-        print('Promise: ', self.promise)
+        self._basic_print_info('Директор')
 
 
 class Company:
@@ -113,7 +114,7 @@ class Company:
         self.__employees = list()
 
     def print(self) -> str:
-        res = "\nbalance: " + str(self.balance) + '\nDirection: '
+        res = f'\nbalance: {self.balance}\nDirection: '
         if self.__director is None:
             res += 'None'
         else:
