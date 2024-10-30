@@ -6,5 +6,6 @@ SergeevVS/git_notes.md
 SergeevVS/Lab_3/__pycache__/*
 SergeevVS/Lab_3/.idea/*
 SergeevVS/.idea/*
-.idea/*
+*.idea/*
+.idea
 .DS_Store
