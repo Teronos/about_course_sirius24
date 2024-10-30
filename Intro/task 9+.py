@@ -12,7 +12,7 @@ class Laptop:
   laptop_name : str
 
   # Создаем конструктор, принимающий аргументы: бренд, модель, цена
-  def __init__(self, brand, model, price) -> None:
+  def __init__(self, brand: str, model: str, price: str) -> None:
     self.brand = brand
     self.model = model
     self.price = price
