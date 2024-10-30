@@ -42,9 +42,8 @@ def apply_pca_to_channel(channel: np.ndarray, num_components: int) -> np.ndarray
 
 from concurrent.futures import ThreadPoolExecutor
 
-def compress_image_pca(image_path: str, num_components) -> Image:
+def compress_image_pca(image_path: str, compress_factor: list) -> Image:#
     image_data = image_to_np(image_path)
-
     # Разделяем изображение на цветовые каналы (R, G, B)
     red_channel = image_data[:, :, 0]
     green_channel = image_data[:, :, 1]
@@ -56,9 +55,9 @@ def compress_image_pca(image_path: str, num_components) -> Image:
 
     # Используем ThreadPoolExecutor для параллельного сжатия
     with ThreadPoolExecutor(max_workers=3) as executor:
-        future_red = executor.submit(pca_compression, red_channel, num_components[0])
-        future_green = executor.submit(pca_compression, green_channel, num_components[1])
-        future_blue = executor.submit(pca_compression, blue_channel, num_components[2])
+        future_red = executor.submit(pca_compression, red_channel, compress_factor[0])
+        future_green = executor.submit(pca_compression, green_channel, compress_factor[1])
+        future_blue = executor.submit(pca_compression, blue_channel, compress_factor[2])
 
         # Получаем результаты выполнения функций
         compressed_red = future_red.result()

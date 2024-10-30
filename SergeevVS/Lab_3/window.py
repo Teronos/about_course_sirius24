@@ -13,31 +13,31 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 
 # типы переменным и многопоточность, лэйблу size добавить коэфицент сжатия
-class ImageCompressor(QMainWindow):
+class ViewCompressor(QMainWindow):
     def __init__(self):
         super().__init__()
         self.path = pathlib.Path.cwd()
-        uic.loadUi(self.path / r"ff.ui", self)
-        self.file_Path:str = None
+        uic.loadUi(self.path / r"SergeevVS/Lab_3/veiw.ui", self)
+        self.file_Path: str = None
         self.compressed_image = None
 
         # UI elements
         self.label = self.findChild(QLabel, "labels")
         self.size = self.findChild(QLabel, "size")
         self.sliderR = self.findChild(QSlider, "sliderR")
-        self.sliderR.setMinimum(1)
+        self.sliderR.setMinimum(0)
         self.sliderR.setMaximum(100)
         self.sliderR.setValue(100)
         self.sliderR.valueChanged.connect(self.update_image)
 
         self.sliderG = self.findChild(QSlider, "sliderG")
-        self.sliderG.setMinimum(1)
+        self.sliderG.setMinimum(0)
         self.sliderG.setMaximum(100)
         self.sliderG.setValue(100)
         self.sliderG.valueChanged.connect(self.update_image)
 
         self.sliderB = self.findChild(QSlider, "sliderB")
-        self.sliderB.setMinimum(1)
+        self.sliderB.setMinimum(0)
         self.sliderB.setMaximum(100)
         self.sliderB.setValue(100)
         self.sliderB.valueChanged.connect(self.update_image)
@@ -50,6 +50,7 @@ class ImageCompressor(QMainWindow):
         self.save_button.setEnabled(False)
 
 
+
     def load_image(self):
         options = QFileDialog.Options()
         self.file_Path, _ = QFileDialog.getOpenFileName(self, "Load Image", "", "Image Files (*.png *.jpg *.bmp)",
@@ -59,6 +60,10 @@ class ImageCompressor(QMainWindow):
         print(self.file_Path)
         if self.file_Path:
             self.update_image()
+
+    def get_size_img(self, value):
+        self.file_Path
+        return int(value/100 * size_img)
 
     def update_image(self):
         if self.file_Path is None:
@@ -90,6 +95,6 @@ class ImageCompressor(QMainWindow):
 # Запуск приложения
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = ImageCompressor()
+    window = ViewCompressor()
     window.show()
     sys.exit(app.exec_())
