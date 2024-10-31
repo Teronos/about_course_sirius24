@@ -293,9 +293,9 @@ person = Person("Иван", "Петров", 20)
 print(person.full_name())
 print(person.is_adult())
 
-#Задание 9*
+# # Задание 9*
 class Laptop:
-    def __init__(self, brand, model, price):
+    def __init__(self, brand: str, model: str, price: float) -> None:
 
         self.brand = brand
         self.model = model
@@ -303,75 +303,75 @@ class Laptop:
 
         self.laptop_name = f"{self.brand} {self.model}"
 
-    def get_laptop_name(self):
+    def get_laptop_name(self) -> str:
         return self.laptop_name
-
 
 laptop = Laptop("Dell", "XPS 13", 1200)
 print(laptop.get_laptop_name())
 print(laptop.price)
 
 # Задание  10*
+
 class Promise:
-    def __init__(self, employee_id, salary):
+    def __init__(self, employee_id: int, salary: float) -> None:
         self.employee_id = employee_id
         self.salary = salary
         self.paid = False
 
-    def fulfill(self):
+    def fulfill(self) -> None:
         self.paid = True
 
-    def reset(self):
+    def reset(self) -> None:
         self.paid = False
 
 
 class Employee:
-    def __init__(self, first_name, second_name, Id, salary):
+    def __init__(self, first_name: str, second_name: str, id: int, salary: float) -> None:
         self.first_name = first_name
         self.second_name = second_name
-        self.Id = Id
-        self.promise = Promise(Id, salary)
+        self.id = id
+        self.promise = Promise(id, salary)
 
 
 class Director(Employee):
-    def __init__(self, first_name, second_name, Id, salary):
-        super().__init__(first_name, second_name, Id, salary)
+    def __init__(self, first_name: str, second_name: str, id: int, salary: float) -> None:
+        super().__init__(first_name, second_name, id, salary)
         self.company = None
 
-    def check_promises(self):
+    def check_promises(self) -> bool:
         if self.company:
             return all(promise.paid for promise in self.company.promises.values())
         return False
 
 
 class Company:
-    def __init__(self, balance=0):
+    def __init__(self, balance: float = 0) -> None:
         self.balance = balance
-        self._director = None
+        self._director_id = None
         self.employees = []
         self.promises = {}
 
-    def create_director(self, first_name, second_name, Id, salary):
-        if self._director is not None:
+    def create_director(self, first_name: str, second_name: str, id: int, salary: float) -> None:
+        if self._director_id is not None:
             raise ValueError("Компания уже имеет директора.")
-        self._director = Director(first_name, second_name, Id, salary)
-        self._director.company = self
+        director = Director(first_name, second_name, id, salary)
+        director.company = self
 
-        self.add_employee(self._director)
+        self._director_id = id
+        self.add_employee(director)
 
-    def create_employee(self, first_name, second_name, Id, salary):
-        employee = Employee(first_name, second_name, Id, salary)
+    def create_employee(self, first_name: str, second_name: str, id: int, salary: float) -> None:
+        employee = Employee(first_name, second_name, id, salary)
         self.add_employee(employee)
 
-    def add_employee(self, employee):
+    def add_employee(self, employee: Employee) -> None:
         self.employees.append(employee)
+        self.promises[employee.id] = employee.promise
 
-        self.promises[employee.Id] = employee.promise
-
-    def set_profit(self, amount):
+    def set_profit(self, amount: float) -> None:
         self.balance += amount
 
-    def fulfill_promise(self):
+    def fulfill_promise(self) -> bool:
         total_salary = sum(promise.salary for promise in self.promises.values())
 
         if self.balance >= total_salary:
@@ -384,28 +384,32 @@ class Company:
                 promise.reset()
             return False
 
-    def director(self):
-        return self._director
+    def director(self) -> Employee:
+        if self._director_id is not None:
+            for employee in self.employees:
+                if employee.id == self._director_id:
+                    return employee
+        return None
 
 vk = Company(balance=50)
 vk.create_director(
   first_name = "Владимир",
   second_name = "Кириенко",
-  Id = 1,
+  id= 1,
   salary = 15
   )
 
 vk.create_employee(
   first_name = "Елена",
   second_name = "Иванова",
-  Id = 2,
+  id= 2,
   salary = 8
 )
 
 vk.create_employee(
   first_name = "Виктор",
   second_name = "Кузнецов",
-  Id = 3,
+  id= 3,
   salary = 6
 )
 
@@ -414,8 +418,7 @@ print(vk.balance)
 print(vk.fulfill_promise())
 
 director = vk.director()
-
-print(director.check_promises())
+print(director)
 
 vk.set_profit(-200)
 
