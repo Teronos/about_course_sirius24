@@ -18,13 +18,14 @@ print(person1.full_name())
 
 #Задача 9*
 class Laptop:
-    def __init__(self, brand, model, price):
+    def __init__(self, brand: str, model: str, price: float) -> None:
         self.brand = brand
         self.model = model
         self.price = price
         self.laptop_name = f"{self.brand} {self.model}"
 
+# Создание экземпляра класса
+laptop1 = Laptop("Apple", "MacBook Pro", 1500.0)
+print(laptop1.laptop_name)
 
-laptop1 = Laptop("Apple", "MacBook Pro", 1500)
-print(laptop1.laptop_name) 
 
