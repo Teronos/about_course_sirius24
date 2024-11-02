@@ -13,11 +13,11 @@ class Homework:
         self.title = title
         self.description = description
         self.deadline = deadline
-        self.tasklist: List[str] = []  # Список задач по домашнему заданию
+        self.task_list: List[str] = []  # Список задач по домашнему заданию
 
     def add_task(self, task: str):
         """Добавить задачу в список задач"""
-        self.tasklist.append(task)
+        self.task_list.append(task)
 
     def __repr__(self):
         return f"Homework(title={self.title}, deadline={self.deadline})"

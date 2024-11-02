@@ -1,3 +1,5 @@
+
+
 class Promise:
     def __init__(self, employee_id: int, salary: float):
         self.employee_id = employee_id
@@ -27,10 +29,6 @@ class Employee:
 
 
 class Director(Employee):
-    def check_promises(self, company) -> bool:
-        """Проверяет, выполнены ли обещания выплаты для всех сотрудников."""
-        return all(employee.promise.is_fulfilled for employee in company.employees)
-
     def __repr__(self):
         return f"Director({self.first_name} {self.second_name}, Id={self.employee_id}, salary={self.promise.salary})"
 
@@ -71,6 +69,13 @@ class Company:
         else:
             return False
 
+    def check_promises(self) -> bool:
+        """Проверяет, выполнены ли обещания выплаты для всех сотрудников."""
+        all_fulfilled = all(employee.promise.is_fulfilled for employee in self.employees)
+        if self._director:
+            all_fulfilled = all_fulfilled and self._director.promise.is_fulfilled
+        return all_fulfilled
+
     def director(self):
         """Возвращает директора компании."""
         return self._director
@@ -106,10 +111,9 @@ vk.create_employee(
 vk.set_profit(145.12)
 print(vk.fulfill_promise())  # True (успешная выплата зарплат)
 
-director = vk.director()
-print(director.check_promises(vk))  # True (выплаты прошли успешно)
+print(vk.check_promises())  # True (выплаты прошли успешно)
 
 vk.set_profit(-200)
 print(vk.fulfill_promise())  # False (недостаточно средств для выплат)
 
-print(director.check_promises(vk))  # False (зарплаты не выплачены)
+print(vk.check_promises())  # False (зарплаты не выплачены)
