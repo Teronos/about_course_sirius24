@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = window.ViewCompressor()
+    window = window.View()
     window.show()
     sys.exit(app.exec_())
 
