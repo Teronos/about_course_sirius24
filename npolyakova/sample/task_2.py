@@ -24,7 +24,7 @@ class Task2:
             except ValueError:
                 print("Ошибка ввода данных")
                 return None
-        return str(even_digits_sum) + str(odd_digits_sum)
+        return f"{even_digits_sum}{odd_digits_sum}"
 
 
 if __name__ == '__main__':
