@@ -1,6 +1,9 @@
 #include "AbstractTask.cpp"
 #include "NumberVect.cpp"
 #include <sstream>
+#include <algorithm>
+#include <ranges> 
+#include <iterator>
 #include <bitset>
 #include <list>
 #include <vector>
@@ -13,8 +16,8 @@ class Task1 : public AbstractTask
 public:
     void Input() override
     {
-        std::cout << "Write down the numbers whose numbers will multiply \n";
-        std::cin >> inputText;
+        cout << "Write down the numbers whose numbers will multiply \n";
+        cin >> inputText;
     }
     void Calculate() override
     {
@@ -26,11 +29,11 @@ public:
         }
         numberResult = numeric;
     }
-    std::string OutputResult() override
+    string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
-    std::string GetName() override
+    string GetName() override
     {
         return "Task 1 Multiply Number";
     }
@@ -38,27 +41,27 @@ public:
 
 class Task2 : public AbstractTask
 {
-    std::string numberResult;
+    string numberResult;
 public:
     void Input() override
     {
-        std::cout << "Write number to revert \n";
-        std::cin >> inputText;
+        cout << "Write number to revert \n";
+        cin >> inputText;
     }
     void Calculate() override
     {
-        std::string newNumber;
+        string newNumber;
         for (int i = inputText.length(); i >= 0 ; i--)
         {
             newNumber += inputText[i];
         }
         numberResult = newNumber;
     }
-    std::string OutputResult() override
+    string OutputResult() override
     {
         return "Result: " + numberResult;
     }
-    std::string GetName() override
+    string GetName() override
     {
         return "Task 2 Revert number";
     }
@@ -66,12 +69,12 @@ public:
 
 class Task2EXTRA : public AbstractTask
 {
-    std::string numberResult;
+    string numberResult;
 public:
     void Input() override
     {
-        std::cout << "Write number to Sum of even and odd \n";
-        std::cin >> inputText;
+        cout << "Write number to Sum of even and odd \n";
+        cin >> inputText;
     }
     void Calculate() override
     {
@@ -84,13 +87,13 @@ public:
             else
                 newNumber2 += (inputText[i] - '0');
         }
-        numberResult = std::to_string(newNumber1) + std::to_string(newNumber2);
+        numberResult = to_string(newNumber1) + to_string(newNumber2);
     }
-    std::string OutputResult() override
+    string OutputResult() override
     {
         return "Result: " + numberResult;
     }
-    std::string GetName() override
+    string GetName() override
     {
         return "Task2Extra even and odd";
     }
@@ -99,17 +102,17 @@ class Task3 : public AbstractTask
 {
     int numberResult;
     int iterator;
-    std::vector<int> numbers;
+    vector<int> numbers;
 public:
     void Input() override
     {
-        std::cout << "Write N iteration \n";
-        std::cin >> iterator;
-        std::cout << "Write" << std::to_string(iterator) << " numbers\n";
+        cout << "Write N iteration \n";
+        cin >> iterator;
+        cout << "Write" << to_string(iterator) << " numbers\n";
         for (int i = 0; i < iterator; i++)
         {
             int number = 0;
-            std::cin >> number;
+            cin >> number;
             numbers.push_back(number);
         }
     }
@@ -124,11 +127,11 @@ public:
             }
         }
     }
-    std::string OutputResult() override
+    string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
-    std::string GetName() override
+    string GetName() override
     {
         return "Task3 count zero";
     }
@@ -137,17 +140,17 @@ class Task3Extra : public AbstractTask
 {
     double numberResult;
     int iterator;
-    std::vector<int> numbers;
+    vector<int> numbers;
 public:
     void Input() override
     {
-        std::cout << "Write N iteration \n";
-        std::cin >> iterator;
-        std::cout << "Write " << std::to_string(iterator) << " numbers\n";
+        cout << "Write N iteration \n";
+        cin >> iterator;
+        cout << "Write " << to_string(iterator) << " numbers\n";
         for (int i = 0; i < iterator; i++)
         {
-            int number = 0;
-            std::cin >> number;
+            int number;
+            cin >> number;
             numbers.push_back(number);
         }
     }
@@ -155,26 +158,27 @@ public:
     {
         int sumNumber = 0;
         int countMultiplyOfThree = 0;
-        for (int i = 0; i < numbers.size(); i++)
+        for (auto& number : numbers)
         {
-            if (numbers[i] % 3 == 0)
+            if (number % 3 == 0)
             {
-                sumNumber += numbers[i];
+                sumNumber += number;
                 countMultiplyOfThree += 1;
             }
         }
-        if (countMultiplyOfThree == 1)
+        //Если нет чисел кратных 3, выводим -1
+        if (countMultiplyOfThree == 0)
         {
             numberResult = -1;
             return;
         }
         numberResult = (double)sumNumber / (double)iterator;
     }
-    std::string OutputResult() override
+    string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
-    std::string GetName() override
+    string GetName() override
     {
         return "Task3Extra Middle of Multiple of 3";
     }
@@ -184,7 +188,7 @@ class Task4 : public AbstractTask
 {
     double numberResult;
     int iterator;
-    std::vector<int> numbers;
+    vector<int> numbers;
 public:
     void Input() override
     {
@@ -239,7 +243,7 @@ public:
     }
     string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
     string GetName() override
     {
@@ -283,7 +287,7 @@ public:
     }
     string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
     string GetName() override
     {
@@ -320,7 +324,7 @@ public:
     }
     string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
     string GetName() override
     {
@@ -425,7 +429,7 @@ public:
     }
     void Calculate() override
     {
-        int max = *max_element(numbers.begin(), numbers.end());
+        int max = *std::ranges::max_element(numbers);
         result = to_string(max);
     }
     string OutputResult() override
@@ -491,7 +495,7 @@ public:
         string s_numbers;
         cin >> ws;
         getline(cin , s_numbers);
-        std::stringstream stream;
+        stringstream stream;
         stream << s_numbers;
         string numberLoc;
         while (iterator > 0 && stream >> numberLoc)
@@ -523,7 +527,7 @@ class Task7Extra : public AbstractTask
 {
     int numberResult;
     int iterator;
-    std::vector<int> numbers;
+    vector<int> numbers;
 public:
     void Input() override
     {
@@ -578,7 +582,7 @@ public:
     }
     string OutputResult() override
     {
-        return "Result: " + std::to_string(numberResult);
+        return "Result: " + to_string(numberResult);
     }
     string GetName() override
     {
@@ -600,7 +604,7 @@ public:
         string s_numbers;
         cin >> ws;
         getline(cin, s_numbers);
-        std::stringstream stream;
+        stringstream stream;
         stream << s_numbers;
         stream >> numberUP;
         stream >> numberDown;
@@ -650,7 +654,7 @@ public:
             cout << "Write " << to_string(iterator) << " numbers Separated by a space Array\n";
             cin >> ws;
             getline(cin, locS);
-            std::stringstream stream;
+            stringstream stream;
             stream << locS;
             string number;
             int index = 0;
@@ -767,7 +771,7 @@ public:
         string s_numbers;
         cin >> ws;
         getline(cin, s_numbers);
-        std::stringstream stream;
+        stringstream stream;
         stream << s_numbers;
         int X, Y;
         stream >> X;
@@ -945,5 +949,191 @@ public:
     string GetName() override
     {
         return "Task10";
+    }
+};
+class Task10Extra : public AbstractTask
+{
+    class Promise 
+    {
+    private:
+        string workerId;
+        float salary;
+        bool isPaid;
+
+    public:
+        Promise(const string& id, float salary)
+            : workerId(id), salary(salary), isPaid(false) {}
+
+        float getSalary() const { return salary; }
+        string getWorkerId() const { return workerId; }
+        bool getIsPaid() const { return isPaid; }
+        void setPaid(bool paid) { isPaid = paid; }
+    };
+
+    class Employee 
+    {
+    protected:
+        string firstName;
+        string lastName;
+        string id;
+        shared_ptr<Promise> promise;
+
+    public:
+        Employee(const string& first, const string& last, const string& snils)
+            : firstName(first), lastName(last), id(snils) {}
+
+        void setPromise(shared_ptr<Promise> newPromise) { promise = newPromise; }
+        shared_ptr<Promise> getPromise() const { return promise; }
+        string getId() const { return id; }
+    };
+
+    class Director : public Employee 
+    {
+    public:
+        Director(const string& first, const string& last, const string& snils)
+            : Employee(first, last, snils) {}
+    };
+
+    class Company
+    {
+    private:
+        unique_ptr<Director> director;
+        vector<unique_ptr<Employee>> employees;
+        float balance;
+
+    public:
+        Company(unique_ptr<Director> dir)
+            : director(move(dir)), balance(0) {}
+
+        void addEmployee(unique_ptr<Employee> emp) {
+            employees.push_back(move(emp));
+        }
+
+        void set_profit(float profit) {
+            balance = profit;
+        }
+
+        bool fulfill_promise() {
+            float totalSalary = 0;
+
+            // Подсчитываем общую сумму зарплат
+            if (director && director->getPromise()) {
+                totalSalary += director->getPromise()->getSalary();
+            }
+
+            for (const auto& emp : employees) {
+                if (emp->getPromise()) {
+                    totalSalary += emp->getPromise()->getSalary();
+                }
+            }
+
+            // Проверяем, хватает ли денег
+            if (totalSalary > balance) {
+                return false;
+            }
+
+            // Выплачиваем зарплаты
+            if (director && director->getPromise()) {
+                director->getPromise()->setPaid(true);
+            }
+
+            for (const auto& emp : employees) {
+                if (emp->getPromise()) {
+                    emp->getPromise()->setPaid(true);
+                }
+            }
+
+            balance -= totalSalary;
+            return true;
+        }
+    };
+private:
+    unique_ptr<Company> company;
+
+    bool success;
+
+    void Test()
+    {
+        auto director = make_unique<Director>("John", "Doe", "123-456-789");
+        director->setPromise(make_shared<Promise>("123-456-789", 5000.0f));
+
+        company = make_unique<Company>(move(director));
+
+        auto emp1 = make_unique<Employee>("Alice", "Smith", "111-222-333");
+        emp1->setPromise(make_shared<Promise>("111-222-333", 2000.0f));
+        company->addEmployee(move(emp1));
+
+        company->set_profit(10000.0f);
+        bool success = company->fulfill_promise();
+    }
+
+public:
+    void Input() override {
+        cout << "Создадим компанию!\n";
+
+        cout << "Введите данные директора (Имя Фамилия СНИЛС Зарплата):\n";
+        string directorData;
+        cin >> ws;
+        getline(cin, directorData);
+        stringstream dirStream(directorData);
+
+        string firstName, lastName, snils;
+        float salary;
+        dirStream >> firstName >> lastName >> snils >> salary;
+
+        auto director = make_unique<Director>(firstName, lastName, snils);
+        director->setPromise(make_shared<Promise>(snils, salary));
+
+        // Создаем компанию
+        company = make_unique<Company>(move(director));
+
+        cout << "Введите количество сотрудников:\n";
+        int empCount;
+        cin >> empCount;
+        cin >> ws; // Очищаем буфер
+
+        cout << "Введите данные каждого сотрудника (Имя Фамилия СНИЛС Зарплата):\n";
+        for (int i = 0; i < empCount; i++) {
+            cout << "Сотрудник " << i + 1 << ":\n";
+            string employeeData;
+            getline(cin, employeeData);
+            stringstream empStream(employeeData);
+
+            empStream >> firstName >> lastName >> snils >> salary;
+
+            auto employee = make_unique<Employee>(firstName, lastName, snils);
+            employee->setPromise(make_shared<Promise>(snils, salary));
+            company->addEmployee(move(employee));
+        }
+
+        // Ввод прибыли компании
+        cout << "Введите прибыль компании:\n";
+        float profit;
+        cin >> profit;
+        company->set_profit(profit);
+    }
+
+    
+
+    void Calculate() override 
+    {
+        //Test();
+
+        success = company->fulfill_promise();
+    }
+
+    string OutputResult() override {
+        std::stringstream result;
+        if (success) {
+            result << "Зарплаты успешно выплачены всем сотрудникам!\n";
+        }
+        else {
+            result << "Недостаточно средств для выплаты всех зарплат!\n";
+        }
+        return result.str();
+    }
+
+    string GetName() override {
+        return "Company Management Task";
     }
 };

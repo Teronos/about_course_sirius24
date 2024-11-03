@@ -1,34 +1,33 @@
-﻿
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include "ArrayTask.cpp"
 #include <vector>
 
 
-std::vector<AbstractTask*> tasks;
+std::vector<std::unique_ptr<AbstractTask>> tasks;
 
 void InitializeTask()
 {
-    tasks.push_back(new Task1());
-    tasks.push_back(new Task2());
-    tasks.push_back(new Task2EXTRA());
-    tasks.push_back(new Task3());
-    tasks.push_back(new Task3Extra());
-    tasks.push_back(new Task4());
-    tasks.push_back(new Task4Extra());
-    tasks.push_back(new Task5());
-    tasks.push_back(new Task5_1());
-    tasks.push_back(new Task5EXTRA());
-    tasks.push_back(new Task6());
-    tasks.push_back(new Task6Extra());
-    tasks.push_back(new Task7());
-    tasks.push_back(new Task7Extra());
-    tasks.push_back(new Task8());
-    tasks.push_back(new Task8Extra());
-    tasks.push_back(new Task9());
-    tasks.push_back(new Task9_1());
-    tasks.push_back(new Task9Extra());
-    tasks.push_back(new Task10());
+    tasks.push_back(std::make_unique<Task1>());
+    tasks.push_back(std::make_unique<Task2>());
+    tasks.push_back(std::make_unique<Task2EXTRA>());
+    tasks.push_back(std::make_unique<Task3>());
+    tasks.push_back(std::make_unique<Task3Extra>());
+    tasks.push_back(std::make_unique<Task4>());
+    tasks.push_back(std::make_unique<Task4Extra>());
+    tasks.push_back(std::make_unique<Task5>());
+    tasks.push_back(std::make_unique<Task5_1>());
+    tasks.push_back(std::make_unique<Task5EXTRA>());
+    tasks.push_back(std::make_unique<Task6>());
+    tasks.push_back(std::make_unique<Task6Extra>());
+    tasks.push_back(std::make_unique<Task7>());
+    tasks.push_back(std::make_unique<Task7Extra>());
+    tasks.push_back(std::make_unique<Task8>());
+    tasks.push_back(std::make_unique<Task8Extra>());
+    tasks.push_back(std::make_unique<Task9>());
+    tasks.push_back(std::make_unique<Task9Extra>());
+    tasks.push_back(std::make_unique<Task10>());
+    tasks.push_back(std::make_unique<Task10Extra>());
 }
 void Clear()
 {
@@ -47,17 +46,21 @@ int main()
         }
         int writeNum;
         std::cin >> writeNum;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
         if (tasks.size() <= writeNum || writeNum < 0)
             continue;
+
         Clear();
-        AbstractTask* task = tasks[writeNum];
+        std::unique_ptr<AbstractTask> task = move(tasks[writeNum]);
         task->Input();
         task->Calculate();
         std::cout << task->OutputResult();
         std::cout << "\n" << "Press Enter to Continue";
 
-        std::cin.get();
-        std::cin.get();
+        tasks[writeNum] = move(task);
+
+        std::cin.get(); // теперь достаточно одного get
     }
 }
 
