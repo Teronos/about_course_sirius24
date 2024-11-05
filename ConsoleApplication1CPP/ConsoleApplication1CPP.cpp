@@ -36,6 +36,7 @@ void Clear()
 int main()
 {
     InitializeTask();
+
     while (true)
     {
         Clear();
@@ -52,13 +53,13 @@ int main()
             continue;
 
         Clear();
-        std::unique_ptr<AbstractTask> task = move(tasks[writeNum]);
-        task->Input();
-        task->Calculate();
-        std::cout << task->OutputResult();
-        std::cout << "\n" << "Press Enter to Continue";
+        AbstractTask& task = *tasks[writeNum];
 
-        tasks[writeNum] = move(task);
+        task.Input();
+        task.Calculate();
+        std::cout << task.OutputResult();
+
+        std::cout << "\n" << "Press Enter to Continue";
 
         std::cin.get(); // теперь достаточно одного get
     }

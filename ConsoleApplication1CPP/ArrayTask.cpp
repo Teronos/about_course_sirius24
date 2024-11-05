@@ -119,13 +119,7 @@ public:
     void Calculate() override
     {
         numberResult = 0;
-        for(int i = 0; i < numbers.size(); i++)
-        {
-            if (numbers[i] == 0)
-            {
-                numberResult++;
-            }
-        }
+        for(auto& num : numbers) if (num == 0) numberResult++;
     }
     string OutputResult() override
     {
