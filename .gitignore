@@ -1,3 +1,4 @@
+
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -18,3 +19,14 @@ ipch/
 *.tlog
 *.lastbuildstate
 
+# MacOs
+*.DS_Store
+
+SergeevVS/.DS_Store
+SergeevVS/git_notes.md
+SergeevVS/Lab_3/__pycache__/*
+SergeevVS/Lab_3/.idea/*
+SergeevVS/.idea/*
+*.idea/*
+.idea
+.DS_Store
