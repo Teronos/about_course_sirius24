@@ -67,7 +67,6 @@ class Company:
 
         return total_salaries > 0
 
-
 # Проверка
 vk = Company(balance=50.0)
 
@@ -89,7 +88,7 @@ vk.create_employee(
     first_name="Виктор",
     second_name="Кузнецов",
     employee_id=3,
-    salary=6.0
+    salary=6
 )
 
 vk.set_profit(145.12)
