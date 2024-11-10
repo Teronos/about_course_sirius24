@@ -69,3 +69,6 @@ for k in range (0,len(data)):
     filename = data.ФИО[k] + '_RuPost_' + str(k+1) + '_подпись.html'
     with open(filename,'w') as file:
         file.write (output_html)
+        
+    # Сообщаем об успешном успехе
+    print('Создан файл ',filename)
