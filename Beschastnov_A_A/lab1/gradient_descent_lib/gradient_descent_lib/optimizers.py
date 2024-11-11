@@ -20,15 +20,22 @@ def sgd(
     bias = 0
 
     for epoch in range(num_epochs):
+        total_loss = 0
+
         for i in range(num_samples):
             y_pred = linear_regression_predict([X[i]], weights, bias)[0]
             error = y_pred - y[i]
+
+            total_loss += error ** 2
 
             gradients_w = [error * X[i][j] for j in range(num_features)]
             gradients_b = error
 
             weights = vector_add(weights, scalar_multiply(-lr, gradients_w))
             bias -= lr * gradients_b
+
+            mean_loss = total_loss / num_samples
+            print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {mean_loss}")
 
     return weights, bias
 
@@ -55,11 +62,15 @@ def nesterov(
     velocity_b = 0.0
 
     for epoch in range(num_epochs):
+        total_loss = 0
+
         for i in range(num_samples):
             temp_weights = vector_add(weights, scalar_multiply(momentum, velocity_w))
             temp_bias = bias + (momentum * velocity_b)
             y_pred = linear_regression_predict([X[i]], temp_weights, temp_bias)[0]
             error = y_pred - y[i]
+
+            total_loss += error ** 2
 
             gradients_w = [error * X[i][j] for j in range(num_features)]
             gradients_b = error
@@ -70,6 +81,9 @@ def nesterov(
 
             weights = subtract_vectors(weights, velocity_w)
             bias -= velocity_b
+
+            mean_loss = total_loss / num_samples
+            print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {mean_loss}")
 
     return weights, bias
 
@@ -97,9 +111,13 @@ def rmsprop(
     Eg_bias = 0
 
     for epoch in range(num_epochs):
+        total_loss = 0
+
         for i in range(num_samples):
             y_pred = linear_regression_predict([X[i]], weights, bias)[0]
             error = y_pred - y[i]
+
+            total_loss += error ** 2
 
             gradients_w = [error * X[i][j] for j in range(num_features)]
             gradients_b = error
@@ -119,6 +137,9 @@ def rmsprop(
             )
 
             bias -= lr * (gradients_b / (epsilon + Eg_bias ** 0.5))
+
+            mean_loss = total_loss / num_samples
+            print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {mean_loss}")
 
     return weights, bias
 
@@ -150,9 +171,13 @@ def adam(
     v_bias = 0
 
     for epoch in range(1, num_epochs + 1):
+        total_loss = 0
+
         for i in range(num_samples):
             y_pred = linear_regression_predict([X[i]], weights, bias)[0]
             error = y_pred - y[i]
+
+            total_loss += error ** 2
 
             gradients_w = [error * X[i][j] for j in range(num_features)]
             gradients_b = error
@@ -173,5 +198,8 @@ def adam(
             weights = vector_add(weights, scalar_multiply(-lr, scalar_multiply(
                 1 / (epsilon + vector_magnitude(v_hat_weights)), m_hat_weights)))
             bias -= lr * m_hat_bias / (epsilon + v_hat_bias ** 0.5)
+
+            mean_loss = total_loss / num_samples
+            print(f"Epoch {epoch + 1}/{num_epochs}, Loss: {mean_loss}")
 
     return weights, bias
