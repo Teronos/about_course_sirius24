@@ -20,6 +20,7 @@ passwd = getpass('Введите пароль: ')
 #логинимся на почтовый сервер
 smtp = smtplib.SMTP_SSL('mail.sirius-ft.ru', 465)
 smtp.login(sender, passwd)
+print('Установлено соединение с почтовым сервером')
 
 # Переходим из корневой папки в ту где лежат подписи
 os.chdir('output')
@@ -78,3 +79,4 @@ for filename in os.listdir(os.getcwd()):
 
 # Закрываем соединение с почтовым сервером
 smtp.quit()
+print('Закрыто соединение с почтовым сервером')
