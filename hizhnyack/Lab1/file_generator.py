@@ -10,8 +10,8 @@ def chdir(folder):
     return
 
 # Читаем шаблон из файла
-with open('program_data/signature_template.html','r') as html:
-    html = html.read()
+with open('program_data/signature_template.html','r') as html_file:
+    html = html_file.read()
 
 # Чтение датафрейма из таблицы
 excel_data = pd.read_excel('program_data/recipients_list.xlsx')
