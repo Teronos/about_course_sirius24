@@ -12,14 +12,20 @@
 
 
  # Создаем класс Promise
-class Promise: 
-    def __init__(self, id, salary): 
+class Promise:
+
+    id : int
+    salary : float
+    is_paid : bool
+    balance : float
+    
+    def __init__(self, id: int, salary: float) -> None: 
         self.id = id 
         self.salary = salary 
         self.is_paid = False  # Покажет, была ли выплачена зп
 
  # Функция, проверяет выплачена зп или нет и возвращает размер зп
-    def fulfill(self, balance): 
+    def fulfill(self, balance: float) -> float: 
         if balance >= self.salary: 
             self.paid = True 
             return self.salary 
@@ -27,49 +33,66 @@ class Promise:
         return 0 
  
  # Создаем класс Employee
-class Employee: 
+class Employee:
 
-    def __init__(self, first_name, second_name, id, salary): 
+    first_name : str
+    second_name : str
+    id : int
+    salary : float
+
+    def __init__(self, first_name: str, second_name: str, id: int, salary: float) -> None: 
         self.first_name = first_name 
         self.second_name = second_name 
         self.id = id 
         self.promise = Promise(id, salary) 
 
 # Создаем класс Director   
-class Director(Employee): 
-    def __init__(self, first_name, second_name, id, salary): 
+class Director(Employee):
+
+    first_name : str
+    second_name : str
+    id : int
+    salary : float
+    
+    def __init__(self, first_name: str, second_name: str, id: int, salary: float) -> None: 
         super().__init__(first_name, second_name, id, salary) 
  
 
  # Функция, которая проверяет все ли обещания были выполнены
-    def check_promises(self, company): 
+    def check_promises(self, company) -> bool: 
         return all(promise.paid for promise in company.promises)
 
 
  # Создаем класс Company
-class Company: 
-    def __init__(self, balance): 
+class Company:
+
+    balance : float
+    director : Director
+    employees : list
+    promises : list
+    
+    def __init__(self, balance: float) -> None: 
         self.balance = balance 
         self.director = None 
         self.employees = [] 
         self.promises = [] 
  
  # Функция, которая создаст директора
-    def create_director(self, first_name, second_name, id, salary): 
+    def create_director(self, first_name: str, second_name: str, id: int, salary: float) -> None: 
         self.director = Director(first_name, second_name, id, salary) 
         self.promises.append(self.director.promise) 
  
   # Функция, которая создаст сотрудника
-    def create_employee(self, first_name, second_name, id, salary): 
+    def create_employee(self, first_name: str, second_name: str, id: int, salary: float) -> None: 
         employee = Employee(first_name, second_name, id, salary) 
         self.employees.append(employee) 
         self.promises.append(employee.promise) 
  
  # Функция, которая устанавливает прибыль компании
-    def set_profit(self, summ): 
+    def set_profit(self, summ: float) -> None: 
         self.balance += summ 
  
-    def fulfill_promise(self): 
+    def fulfill_promise(self) -> bool: 
         # Сбрасываем статус "is_paid" перед началом выполнения 
         for i in self.promises: 
             i.paid = False 
