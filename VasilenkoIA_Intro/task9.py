@@ -4,15 +4,13 @@
 #Метод laptop_name возврашающий аналогичное значение поля.
 
 class Laptop:
-    def __init__(self, brand, model, price):
+    def __init__(self, brand: str, model: str, price: float) -> None:
+        self.brand: str = brand
+        self.model: str = model
+        self.price: float = price
+        self.laptop_name: str = f"{self.brand} {self.model}"
 
-        self.brand = brand
-        self.model = model
-        self.price = price
-
-        self.laptop_name = f"{self.brand} {self.model}"
-
-    def laptop_name(self):
+    def laptop_name(self) -> str:
         return self.laptop_name
 
 #Проверка
