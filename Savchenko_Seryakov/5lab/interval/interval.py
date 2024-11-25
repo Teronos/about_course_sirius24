@@ -3,13 +3,16 @@ class for interval
 """
 from .type_open_bracket import TypeOpenBracket
 from .type_closed_bracket import TypeClosedBracket
+from .intervals import Intervals
 
 
-class Interval:
+class Interval():
     left_bracket: str
     left_border: int
     right_border: int
     right_bracket: str
+
+    # TODO Перегрузка (альтернативная инициализация)
 
     # Инициализируем
     def __init__(self, left_bracket, left_border, right_border, right_bracket):
@@ -92,32 +95,62 @@ class Interval:
     def weight(self):
         return self.right_border - self.left_border
 
+    # Перегрузка "="
+    def __eq__(self, other):
+        if (self.left_bracket == other.left_bracket) and (
+                self.left_border == other.left_border) and (
+                self.right_border == other.right_border) and (
+                self.right_bracket == other.right_bracket):
+            return True
+        else:
+            return False
+
+    # Перегрузка "<"
+    def __lt__(self, other):
+        # # TODO разобрать работу с ошибками
+        # if not isinstance(other, Interval):
+        #     raise TypeError("Операнд справа должен иметь тип Interval")
+        if self.left_border < other.left_border:
+            return True
+        elif self.left_border == other.left_border:
+            if self.right_border < other.right_border:
+                return True
+        return False
+
     # Пока для []
     def __add__(self, other):
+        intervals = Intervals()
         # Берём тот интервал, у которого левая граница меньше
-        if self.left_border > other.left_border:
+        # TODO было добавлено равенство, проверить условия сложения интервалов
+        if self.left_border >= other.left_border:
             self, other = other, self
 
         # Есть пересечение второго интервала с первым
         if self.right_border > other.left_border:
             # Есть включение второго интервала в первый
             if self.right_border > other.right_border:
+                # TODO Подумать должен ли на выходе быть объект класса Intervals
                 return self
+                # intervals = Intervals()
+                # intervals.__add__(self)
+                # return intervals
+
             return Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
 
         elif self.right_border == other.left_border:
             # if self.right_bracket == TypeClosedBracket.SQUARE or other.left_bracket == TypeOpenBracket.SQUARE:
             if self.right_bracket == ']' or other.left_bracket == '[':
+                # new_interval = Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
+                # intervals.__add__(new_interval)
+                # return intervals
                 return Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
             else:
                 # return [self, other]
-                intervals = Intervals()
-                intervals.__add__(self)
-                intervals.__add__(other)
+                intervals.list_intervals.append(self)
+                intervals.list_intervals.append(other)
                 return intervals
 
         # return [self, other]
-        intervals = Intervals()
-        intervals.__add__(self)
-        intervals.__add__(other)
+        intervals.list_intervals.append(self)
+        intervals.list_intervals.append(other)
         return intervals

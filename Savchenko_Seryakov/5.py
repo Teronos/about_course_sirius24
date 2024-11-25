@@ -1,10 +1,7 @@
 """
 
-Мини-библиотека реализующая интервалы,
-с функционалом их
-объединения,
-вычисления ширины,
-проверки на эквивалентность.
+Мини-библиотека реализующая интервалы, с функционалом их
+объединения, вычисления ширины, проверки на эквивалентность.
 В состав библиотеки должен также входить
 парсер, который считывает строковое представление интервалов
 и по нему создает нужные объекты.
@@ -40,11 +37,22 @@ class TypeOpenBracket(Enum):
     SQUARE = '['
     CURLY = '{'
 
+    def __str__(self):
+        return f'{self.value}'
+
+    # def __eq__(self, other):
+    #     if type(other) == str:
+    #         return other == self.value
+    #     return False
+
 
 class TypeClosedBracket(Enum):
     ROUND = ')'
     SQUARE = ']'
     CURLY = '}'
+
+    def __str__(self):
+        return f'{self.value}'
 
 
 class Interval():
@@ -52,6 +60,8 @@ class Interval():
     left_border: int
     right_border: int
     right_bracket: str
+
+    # TODO Перегрузка (альтернативная инициализация)
 
     # Инициализируем
     def __init__(self, left_bracket, left_border, right_border, right_bracket):
@@ -134,34 +144,64 @@ class Interval():
     def weight(self):
         return self.right_border - self.left_border
 
+    # Перегрузка "="
+    def __eq__(self, other):
+        if (self.left_bracket == other.left_bracket) and (
+                self.left_border == other.left_border) and (
+                self.right_border == other.right_border) and (
+                self.right_bracket == other.right_bracket):
+            return True
+        else:
+            return False
+
+    # Перегрузка "<"
+    def __lt__(self, other):
+        # # TODO разобрать работу с ошибками
+        # if not isinstance(other, Interval):
+        #     raise TypeError("Операнд справа должен иметь тип Interval")
+        if self.left_border < other.left_border:
+            return True
+        elif self.left_border == other.left_border:
+            if self.right_border < other.right_border:
+                return True
+        return False
+
     # Пока для []
     def __add__(self, other):
+        intervals = Intervals()
         # Берём тот интервал, у которого левая граница меньше
-        if self.left_border > other.left_border:
+        # TODO было добавлено равенство, проверить условия сложения интервалов
+        if self.left_border >= other.left_border:
             self, other = other, self
 
         # Есть пересечение второго интервала с первым
         if self.right_border > other.left_border:
             # Есть включение второго интервала в первый
             if self.right_border > other.right_border:
+                # TODO Подумать должен ли на выходе быть объект класса Intervals
                 return self
+                # intervals = Intervals()
+                # intervals.__add__(self)
+                # return intervals
+
             return Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
 
         elif self.right_border == other.left_border:
             # if self.right_bracket == TypeClosedBracket.SQUARE or other.left_bracket == TypeOpenBracket.SQUARE:
             if self.right_bracket == ']' or other.left_bracket == '[':
+                # new_interval = Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
+                # intervals.__add__(new_interval)
+                # return intervals
                 return Interval(self.left_bracket, self.left_border, other.right_border, other.right_bracket)
             else:
                 # return [self, other]
-                intervals = Intervals()
-                intervals.__add__(self)
-                intervals.__add__(other)
+                intervals.list_intervals.append(self)
+                intervals.list_intervals.append(other)
                 return intervals
 
         # return [self, other]
-        intervals = Intervals()
-        intervals.__add__(self)
-        intervals.__add__(other)
+        intervals.list_intervals.append(self)
+        intervals.list_intervals.append(other)
         return intervals
 
 
@@ -178,16 +218,25 @@ class Intervals():
     @classmethod
     def parser(cls, intervals_srt):
         intervals = cls()
-        new_intervals_srt = intervals_srt[1:-1]
-        # parts = new_intervals_srt.split(', ')
-        # for i in range(len(new_intervals_srt)):
+        if intervals_srt[0] == '{':
+            new_intervals_srt = intervals_srt
+        else:
+            new_intervals_srt = intervals_srt[1:-1]
         while len(new_intervals_srt) > 1:
             i = 0
             while new_intervals_srt[i] != ']' and new_intervals_srt[i] != ')' and new_intervals_srt[i] != '}':
                 i += 1
             part = new_intervals_srt[:i + 1]
-            inter = Interval.parser(part)
-            intervals.list_intervals.append(inter)
+            # Обработка массива точек
+            if part[0] == '{' and ',' in part:
+                new_points = part[1:-1]
+                array_points = new_points.split(', ')
+                for point in array_points:
+                    inter = Interval.parser('{' + point + '}')
+                    intervals.list_intervals.append(inter)
+            else:
+                inter = Interval.parser(part)
+                intervals.list_intervals.append(inter)
             if len(new_intervals_srt[i + 1:]) > 3:
                 new_intervals_srt = new_intervals_srt[i + 3:]
             else:
@@ -196,8 +245,27 @@ class Intervals():
         return intervals
 
     # TODO - подумать как оно должно работать (это довавление а не сумма)
-    def __add__(self, interval):
-        self.list_intervals.append(interval)
+    def __add__(self, other):
+        intervals = Intervals()
+        for inter1 in self.list_intervals:
+            intervals.list_intervals.append(inter1)
+        for inter2 in other.list_intervals:
+            intervals.list_intervals.append(inter2)
+        return intervals.union()
+
+    def union(self):
+        intervals = Intervals()
+        # Сортировка
+        self.list_intervals.sort()
+        first_inter = self.list_intervals[0]
+        intervals.list_intervals.append(first_inter)
+        for inter_old in self.list_intervals[1:]:
+            summ = inter_old + intervals.list_intervals[-1]
+            if isinstance(summ, Interval):
+                intervals.list_intervals[-1] = summ
+            else:
+                intervals.list_intervals.append(inter_old)
+        return intervals
 
     def __str__(self):
         output_inter = '['
@@ -225,24 +293,79 @@ class Intervals():
 
 
 if __name__ == '__main__':
-    # interval1 = Interval.parser('[10, 12]')
+    prom1 = Interval.parser('[0, 1]')
+    prom2 = Interval.parser('[0, 1]')
+    print(prom1 == prom2)
+
+
+
+
+
+    # Test_1
+    # [(0, 1), (1, 7), (7, 10]] + {0, 1, 7} = [0, 10] (добавление точек)
+    inters1 = Intervals.parser('[(0, 1), (1, 7), (7, 10]]')
+    inters2 = Intervals.parser('{0, 1, 7}')
+    inters3 = inters1 + inters2
+    print(inters3)
+    print('-' * 50)
+
+    # Test_2
+    # [5, 6] + (-2, 4) = [(-2, 4), [5, 6]](объединение интервалов)
+    inters4 = Interval.parser('[5, 6]')
+    inters5 = Interval.parser('(-2, 4)')
+    inters6 = inters4 + inters5
+    print(inters6)
+    print('-' * 50)
+
+    # Test_3
+    # (0, 12) + [(-2, 1), (7, 10]] = (-2, 12)(объединение интервалов в один)
+    # TODO сложение интервала и интервалса не работает
+    # inters7 = Interval.parser('(0, 12)')
+    # inters8 = Interval.parser('[(-2, 1), (7, 10]]')
+    # inters9 = inters7 + inters8
+    # print(inters9)
+    # print('-' * 50)
+
+    # interval1 = Interval.parser('[4, 12]')
     interval1 = Interval.parser('{10}')
-    print(interval1)  # Вывод: [7, 8]
+    print(interval1)
     print(interval1.weight())
+
     interval2 = Interval.parser('(-2, 5)')
     # interval2 = Interval.parser('{4}')
-    print(interval2)  # Вывод: [5, 13]
+    print(interval2)
     print(interval2.weight())
 
     interval3 = interval1 + interval2
     print(interval3)
+    print(type(interval3))
+    print(isinstance(interval3, Interval))
+    print(isinstance(interval3, Intervals))
     print(interval3.weight())
+    print('#' * 30)
 
-    interval4 = Intervals.parser('[(0, 1), (1, 7), (7, 10]]')
+    interval4 = Intervals.parser('[(0, 1), (1, 7), (7, 30]]')
     print(interval4)
     print(type(interval4))
 
-    interval5 = Intervals.parser('[(0, 1), (1, 7), {10}]')
+    # interval5 = Intervals.parser('[(0, 1), (1, 7), {10}]')
+    interval5 = Intervals.parser('[(0, 1), [5, 10], (1, 7), {1}, [0, 20), {5}, {100}]')
     print(interval5)
     print(type(interval5))
 
+    print(interval5.union())
+
+    interval6 = interval4 + interval5
+    print('===')
+    print(interval4)
+    print('===')
+    print(interval5)
+    print('===')
+
+    # print(len(interval5.list_intervals))
+    print(interval6)
+
+    interval7 = Intervals.parser('[{5, 100}]')
+    print(interval7)
+
+    # print('(' in {e.value for e in TypeOpenBracket})

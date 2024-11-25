@@ -8,3 +8,6 @@ class TypeClosedBracket(Enum):
     ROUND = ')'
     SQUARE = ']'
     CURLY = '}'
+
+    def __str__(self):
+        return f'{self.value}'
