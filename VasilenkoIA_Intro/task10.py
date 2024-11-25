@@ -7,56 +7,59 @@
 
 
 class Promise:
-    def __init__(self, employee_id, salary):
-        self.employee_id = employee_id
-        self.salary = salary
-        self.is_paid = False
+    def __init__(self, employee_id: int, salary: float) -> None:
+        self.employee_id: int = employee_id
+        self.salary: float = salary
+        self.is_paid: bool = False
 
-    def fulfill(self, balance):
+    def fulfill(self, balance: float) -> float:
         if balance >= self.salary:
             self.is_paid = True
             return self.salary
         self.is_paid = False
-        return 0
+        return 0.0
+
 
 class Employee:
-    def __init__(self, first_name, second_name, employee_id, salary):
-        self.first_name = first_name
-        self.second_name = second_name
-        self.id = employee_id
-        self.promise = Promise(employee_id, salary)
+    def __init__(self, first_name: str, second_name: str, employee_id: int, salary: float) -> None:
+        self.first_name: str = first_name
+        self.second_name: str = second_name
+        self.id: int = employee_id
+        self.promise: Promise = Promise(employee_id, salary)
+
 
 class Director(Employee):
-    def __init__(self, first_name, second_name, employee_id, salary):
+    def __init__(self, first_name: str, second_name: str, employee_id: int, salary: float) -> None:
         super().__init__(first_name, second_name, employee_id, salary)
 
-    def check_promises(self, company):
+    def check_promises(self, company: "Company") -> bool:
         return all(promise.is_paid for promise in company.promises)
 
-class Company:
-    def __init__(self, balance):
-        self.balance = balance
-        self.director = None
-        self.employees = []
-        self.promises = []
 
-    def create_director(self, first_name, second_name, employee_id, salary):
+class Company:
+    def __init__(self, balance: float) -> None:
+        self.balance: float = balance
+        self.director: Director | None = None
+        self.employees: list[Employee] = []
+        self.promises: list[Promise] = []
+
+    def create_director(self, first_name: str, second_name: str, employee_id: int, salary: float) -> None:
         self.director = Director(first_name, second_name, employee_id, salary)
         self.promises.append(self.director.promise)
 
-    def create_employee(self, first_name, second_name, employee_id, salary):
+    def create_employee(self, first_name: str, second_name: str, employee_id: int, salary: float) -> None:
         employee = Employee(first_name, second_name, employee_id, salary)
         self.employees.append(employee)
         self.promises.append(employee.promise)
 
-    def set_profit(self, amount):
+    def set_profit(self, amount: float) -> None:
         self.balance += amount
 
-    def fulfill_promise(self):
+    def fulfill_promise(self) -> bool:
         for promise in self.promises:
             promise.is_paid = False
 
-        total_salaries = 0
+        total_salaries = 0.0
         for promise in self.promises:
             salary_paid = promise.fulfill(self.balance)
             total_salaries += salary_paid
@@ -64,22 +67,21 @@ class Company:
 
         return total_salaries > 0
 
-#Проверка
-
-vk = Company(balance=50)
+# Проверка
+vk = Company(balance=50.0)
 
 vk.create_director(
     first_name="Владимир",
     second_name="Кириенко",
     employee_id=1,
-    salary=15
+    salary=15.0
 )
 
 vk.create_employee(
     first_name="Елена",
     second_name="Иванова",
     employee_id=2,
-    salary=8
+    salary=8.0
 )
 
 vk.create_employee(
@@ -95,7 +97,7 @@ vk.fulfill_promise()
 director = vk.director
 print(director.check_promises(vk))  # True
 
-vk.set_profit(-200)
+vk.set_profit(-200.0)
 vk.fulfill_promise()
 
 print(director.check_promises(vk))  # False
