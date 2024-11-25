@@ -1,10 +1,10 @@
 import unittest
-import interval
+import cs_interval
 
 class TestInterval(unittest.TestCase):
 
     def test_upper(self):
-        interval.Interval()
+        cs_interval.Interval()
         self.assertEqual('foo'.upper(), 'FOO')
 
     def test_isupper(self):
