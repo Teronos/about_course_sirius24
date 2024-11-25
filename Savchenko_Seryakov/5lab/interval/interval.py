@@ -56,7 +56,7 @@ class Interval:
             return
 
         # Поиск начала числа
-        while i < len(interval_str) or not interval_str[i].isnumeric():
+        while i < len(interval_str) and not interval_str[i].isnumeric():
             i += 1
 
         # Обработка отсутствия правого числа
@@ -65,7 +65,7 @@ class Interval:
 
         # Поиск второго числа
         a = ''
-        while i < len(interval_str) or interval_str[i].isnumeric():
+        while i < len(interval_str) and interval_str[i].isnumeric():
             a += interval_str[i]
             i += 1
 
@@ -96,16 +96,21 @@ class Interval:
     # Выводим интервал
     def __str__(self) -> str:
         if self.left_bracket == TypeOpenBracket.CURLY:
+            if self.left_border.is_integer():
+                return f'{self.left_bracket}{int(self.left_border)}{self.right_bracket}'
             return f'{self.left_bracket}{self.left_border}{self.right_bracket}'
         else:
+            if self.left_border.is_integer() and self.right_border.is_integer():
+                return f'{self.left_bracket}{int(self.left_border)}, {int(self.right_border)}{self.right_bracket}'
+            elif self.left_border.is_integer() and not self.right_border.is_integer():
+                return f'{self.left_bracket}{int(self.left_border)}, {self.right_border}{self.right_bracket}'
+            elif not self.left_border.is_integer() and self.right_border.is_integer():
+                return f'{self.left_bracket}{self.left_border}, {int(self.right_border)}{self.right_bracket}'
             return f'{self.left_bracket}{self.left_border}, {self.right_border}{self.right_bracket}'
 
     # Преобразуем интервал в строку
     def __repr__(self) -> str:
-        if self.left_bracket == TypeOpenBracket.CURLY:
-            return f'{self.left_bracket}{self.left_border}{self.right_bracket}'
-        else:
-            return f'{self.left_bracket}{self.left_border}, {self.right_border}{self.right_bracket}'
+        return self.__str__()
 
     # Ширина интервала
     def weight(self) -> float:
