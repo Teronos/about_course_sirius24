@@ -32,20 +32,19 @@
 
 from enum import Enum
 
-from cs_interval.interval import Interval
-from cs_interval.intervals import Intervals
+from interval.interval import Interval, Intervals
 
-# from .cs_interval import *
+# from .interval import *
 
 # import sys
 # import os
 #
 # # Добавляем путь к каталогу pack в sys.path
-# sys.path.append(os.path.join(os.path.dirname(__file__), 'cs_interval'))
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'interval'))
 #
 # # Теперь можно импортировать ваш модуль
 
-from cs_interval import *
+from interval import *
 
 
 
