@@ -39,7 +39,7 @@ class Interval:
         # Поиск левого числа
         a = ''
         i = 1
-        while interval_str[i].isnumeric():
+        while interval_str[i].isnumeric() or interval_str[i] == '.':
             a += interval_str[i]
             i += 1
 
@@ -65,7 +65,7 @@ class Interval:
 
         # Поиск второго числа
         a = ''
-        while i < len(interval_str) and interval_str[i].isnumeric():
+        while i < len(interval_str) and interval_str[i].isnumeric() or interval_str[i] == '.':
             a += interval_str[i]
             i += 1
 
@@ -201,9 +201,9 @@ class Interval:
         # Проверка на подходящий тип интервала
         if not isinstance(other, (Interval, Intervals, int, float)):
             raise TypeError('Добавление интервала или точки не возможно')
-        obj = other
+        obj = [other]
 
-        # Преобразование числа и интервалса в лист интервалов
+        # Преобразование числа, интервала и интервалса в лист интервалов
         if isinstance(other, (int, float)):
             obj = [Interval('{' + str(other) + '}')]
         elif isinstance(other, Intervals):
@@ -211,7 +211,6 @@ class Interval:
             for inter in other.list_intervals:
                 obj.append(inter)
 
-        # Добавление интервала в лист для упрощения сложения
         obj.append(self)
 
         # Сортировка листа по увеличению
@@ -224,7 +223,7 @@ class Interval:
             if len(res) > 1:
                 result.append(obj[i])
             else:
-                result[-1] = res
+                result[-1] = res[0]
 
         # Если в листе остался один интервал, то вернуть интервал, иначе лист интервалов
         if len(result) > 1:
@@ -287,7 +286,7 @@ class Intervals:
     def __init__(self, interval_str: str) -> None:
         self.list_intervals = []
         # Обработка пустой строки
-        if len(interval_str) > 2:
+        if len(interval_str) <= 2:
             raise ValueError('Вы передали пустой список интервалов')
         self.__parser(interval_str)
 
