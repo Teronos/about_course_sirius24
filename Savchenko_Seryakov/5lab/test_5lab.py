@@ -259,11 +259,10 @@ class TestInterval(unittest.TestCase):
         self.assertTrue(inter1 < inter2)
 
     # TODO добавить тесты, когда один из интервалов одинарный интервалс
-    # def test_interval_and_intervals(self):
-    #     inter1 = interval.Interval('(0, 5)')
-    #     inter2 = interval.Interval('[[1, 7]]')
-    #     self.assertTrue(inter1 < inter2)
-
+    def test_interval_and_intervals(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Intervals('[[1, 7]]')
+        self.assertTrue(inter1 < inter2)
 
     # False
     def test_interval_and_interval(self):
@@ -281,15 +280,26 @@ class TestInterval(unittest.TestCase):
         inter2 = interval.Interval('[0, 5]')
         self.assertFalse(inter1 < inter2)
 
-    # TODO добавить тесты, когда один из интервалов одинарный интервалс
-    # def test_interval_and_intervals2(self):
-    #     inter1 = interval.Interval('(0, 5)')
-    #     inter2 = interval.Interval('[(1, 7), [9, 12]]')
-    #     self.assertFalse(inter1 < inter2)
+    def test_otrezok_and_otrezok_eq(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[0, 5]')
+        self.assertFalse(inter1 < inter2)
+
     def test_interval_and_intervals2(self):
         try:
             inter1 = interval.Interval('(0, 5)')
-            inter2 = interval.Interval('[(1, 7), [9, 12]]')
+            inter2 = '(1, 7)'
+            self.assertTrue(inter1 < inter2)
+        except TypeError as e:
+            self.assertEqual(e.args, ('Сравнение интервала не с интервалом невозможно',))
+        except:
+            self.assertTrue(False)
+
+    # TODO добавить тесты, когда один из интервалов одинарный интервалс
+    def test_interval_and_intervals2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(1, 7), [9, 12]]')
             self.assertTrue(inter1 < inter2)
         except ValueError as e:
             self.assertEqual(e.args, ('Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно',))
@@ -297,14 +307,50 @@ class TestInterval(unittest.TestCase):
             self.assertTrue(False)
 
 
-    # Ошибки
-
 
     # Test +
+    # True
+    # def test_int_to_point(self):
+    #     try:
+    #         inter1 = interval.Interval('(0, 5)')
+    #         inter2 = 4
+    #     self.assert
+
+    # False
+    def test_false_add_type(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = '(1, 7)'
+            self.assertTrue(inter1 + inter2)
+        except TypeError as e:
+            self.assertEqual(e.args, ('Добавление интервала или точки не возможно',))
+        except:
+            self.assertTrue(False)
+
+
+    # Test in
     # True
 
 
     # False
+    def test_false_contains_type(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = '(1, 7)'
+            self.assertTrue(inter2 in inter1)
+        except TypeError as e:
+            self.assertEqual(e.args, ('Сравнение интервала не с интервалом не возможно',))
+        except:
+            self.assertTrue(False)
+
+    # TODO Intervals
+    # def test_false_contains_intervals(self):
+    #     inter1 = interval.Interval('(0, 5)')
+    #     inter2 = interval.Intervals('[(0, 5), [5, 10]]')
+    #     self.assertFalse(inter2 in inter1)
+
+
+
     """
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
