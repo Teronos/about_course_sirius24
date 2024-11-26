@@ -231,6 +231,49 @@ class Interval:
             return result
         return result[0]
 
+    # Проверка на вхождение в интервал
+    def __contains__(self, item) -> bool:
+        # Проверка на подходящий тип интервала
+        if not isinstance(item, (Interval, Intervals, int, float)):
+            raise TypeError('Сравнение интервала не с интервалом не возможно')
+        if isinstance(item, Intervals):
+            return False
+        if isinstance(item, (int, float)):
+            match self.left_bracket, self.right_bracket:
+                case TypeOpenBracket.SQUARE, TypeClosedBracket.SQUARE:
+                    return self.left_border <= item <= self.right_border
+                case TypeOpenBracket.SQUARE, TypeClosedBracket.ROUND:
+                    return self.left_border <= item < self.right_border
+                case TypeOpenBracket.ROUND, TypeClosedBracket.SQUARE:
+                    return self.left_border < item <= self.right_border
+                case TypeOpenBracket.ROUND, TypeClosedBracket.ROUND:
+                    return self.left_border < item < self.right_border
+                case TypeOpenBracket.CURLY, TypeClosedBracket.CURLY:
+                    return self.left_border == item == self.right_border
+        if item.left_border < self.left_border:
+            return False
+        elif item.left_border == self.left_border:
+            if self.left_bracket == TypeOpenBracket.SQUARE or (
+                    self.left_bracket == TypeOpenBracket.ROUND and item.left_bracket == TypeOpenBracket.ROUND):
+                if item.right_border == self.right_border:
+                    return self.right_bracket == TypeClosedBracket.SQUARE or (
+                            self.right_bracket == TypeClosedBracket.ROUND and (
+                            item.right_bracket == TypeClosedBracket.ROUND))
+                else:
+                    return self.right_border > item.right_border
+            return False
+        else:
+            if self.right_border < item.left_border:
+                return False
+            elif self.right_border > item.right_border:
+                return True
+            elif self.right_border == item.right_border:
+                return self.right_bracket == TypeClosedBracket.SQUARE or (
+                        self.right_bracket == TypeClosedBracket.ROUND and (
+                        item.right_bracket == TypeClosedBracket.ROUND))
+            else:
+                return False
+
 
 """
 class for intervals
@@ -238,94 +281,128 @@ class for intervals
 
 
 class Intervals:
-    list_intervals: list
+    list_intervals: list[Interval]
 
-    def __init__(self):
+    # Инициализация
+    def __init__(self, interval_str: str) -> None:
         self.list_intervals = []
+        # Обработка пустой строки
+        if len(interval_str) > 2:
+            raise ValueError('Вы передали пустой список интервалов')
+        self.__parser(interval_str)
 
-
-
-
-    @classmethod
-    def parser(cls, intervals_srt):
-        intervals = cls()
-        if intervals_srt[0] == '{':
+    # Парсер строки в интервалс
+    def __parser(self, intervals_srt: str) -> None:
+        new_intervals_srt = ''
+        # Предобработка входной строки
+        if intervals_srt[0] == TypeOpenBracket.CURLY.value:
             new_intervals_srt = intervals_srt
         else:
-            new_intervals_srt = intervals_srt[1:-1]
+            if intervals_srt[1].isnumeric():
+                new_intervals_srt = intervals_srt
+            else:
+                new_intervals_srt = intervals_srt[1:]
+            if not intervals_srt[-2].isnumeric():
+                new_intervals_srt = new_intervals_srt[:-1]
+
+        # Обработка строки
         while len(new_intervals_srt) > 1:
             i = 0
-            while new_intervals_srt[i] != ']' and new_intervals_srt[i] != ')' and new_intervals_srt[i] != '}':
+            while i < len(new_intervals_srt) and new_intervals_srt[i] not in [
+                TypeClosedBracket.CURLY.value, TypeClosedBracket.ROUND.value, TypeClosedBracket.SQUARE.value]:
                 i += 1
+            if new_intervals_srt[i] not in [TypeClosedBracket.CURLY.value,
+                                            TypeClosedBracket.ROUND.value, TypeClosedBracket.SQUARE.value]:
+                raise ValueError('Вы забыли закрывающую скобку ), ] или }')
             part = new_intervals_srt[:i + 1]
+
             # Обработка массива точек
-            if part[0] == '{' and ',' in part:
-                new_points = part[1:-1]
-                array_points = new_points.split(', ')
-                for point in array_points:
-                    inter = Interval.parser('{' + point + '}')
-                    intervals.list_intervals.append(inter)
+            if part[0] == TypeOpenBracket.CURLY.value:
+                j = 1
+                while j < len(part) - 1:
+                    s = ''
+                    while not part[j].isnumeric():
+                        s += part[j]
+                        j += 1
+                    self.list_intervals.append(Interval('{' + s + '}'))
+                    while part[j].isnumeric():
+                        j += 1
             else:
-                inter = Interval.parser(part)
-                intervals.list_intervals.append(inter)
-            if len(new_intervals_srt[i + 1:]) > 3:
-                new_intervals_srt = new_intervals_srt[i + 3:]
-            else:
-                new_intervals_srt = new_intervals_srt[i + 1:]
+                self.list_intervals.append(Interval(part))
 
-        return intervals
+            # Поиск начала следующего интервала
+            while i < len(new_intervals_srt) and new_intervals_srt[i] not in [
+                TypeOpenBracket.CURLY.value, TypeOpenBracket.ROUND.value, TypeOpenBracket.SQUARE.value]:
+                i += 1
+            new_intervals_srt = new_intervals_srt[i:]
 
-    # TODO - подумать как оно должно работать (это довавление а не сумма)
+    # Перегрузка +
     def __add__(self, other):
-        intervals = Intervals()
-        for inter1 in self.list_intervals:
-            intervals.list_intervals.append(inter1)
-        for inter2 in other.list_intervals:
-            intervals.list_intervals.append(inter2)
-        return intervals.union()
+        # Проверка на подходящий тип интервала
+        if not isinstance(other, (Interval, Intervals, int, float)):
+            raise TypeError('Добавление интервала или точки не возможно')
+        obj = other
 
+        # Преобразование числа и интервалса в лист интервалов
+        if isinstance(other, (int, float)):
+            obj = [Interval('{' + str(other) + '}')]
+        elif isinstance(other, Intervals):
+            obj = []
+            for inter in other.list_intervals:
+                obj.append(inter)
+
+        # Добавление интервалса в лист для упрощения сложения
+        for inter in self.list_intervals:
+            obj.append(inter)
+
+        # Сортировка листа по увеличению
+        sorted(obj)
+
+        # Упрощение листа интервалов
+        return obj.union()
+
+    # Объединение интервалов в листе
     def union(self):
-        intervals = Intervals()
+        intervals = []
         # Сортировка
-        self.list_intervals.sort()
-        first_inter = self.list_intervals[0]
-        intervals.list_intervals.append(first_inter)
+        sorted(self.list_intervals)
+        intervals.append(self.list_intervals[0])
         for inter_old in self.list_intervals[1:]:
-            summ = inter_old + intervals.list_intervals[-1]
-            if isinstance(summ, Interval):
-                intervals.list_intervals[-1] = summ
+            summ = inter_old + intervals[-1]
+            if isinstance(summ, list):
+                intervals[-1] = summ
             else:
-                intervals.list_intervals.append(inter_old)
-        return intervals
+                intervals.append(inter_old)
+        self.list_intervals = intervals
+        return self
 
+    # Преобразование в строку
     def __str__(self):
-        output_inter = '['
-        for inter in self.list_intervals:
-            output_inter += inter.__repr__() + ', '
+        output_inter = self.list_intervals[0].__repr__()
+        for i in range(1, len(self.list_intervals)):
+            output_inter += ', ' + self.list_intervals[i].__repr__()
+        return '[' + output_inter + ']'
 
-        output_inter = output_inter[:-2]
-        output_inter += ']'
-        return output_inter
-
+    # Преобразование в строку
     def __repr__(self):
-        output_inter = '['
-        for inter in self.list_intervals:
-            output_inter += inter.__repr__() + ', '
+        return self.__str__()
 
-        output_inter = output_inter[:-2]
-        output_inter += ']'
-        return output_inter
-
+    # Вычисление ширины
     def weight(self):
         sum_weight = 0
-        for interv in self.list_intervals:
-            sum_weight += interv.weight()
+        for inter in self.list_intervals:
+            sum_weight += inter.weight()
         return sum_weight
 
-    # эквивалентность
-    def equivalence(self, other):
+    # Эквивалентность
+    def is_equal(self, other):
+        # Проверка на подходящий тип интервала
+        if not isinstance(other, (Interval, Intervals)):
+            raise TypeError('Не возможно проверить на эквивалентность интервал ' + str(type(other)))
+        if isinstance(other, Interval):
+            other = Intervals('[' + other.__str__() + ']')
         result = False
-        self = self.union()
+        self.union()
         other = other.union()
         if (len(self.list_intervals) == len(other.list_intervals)) and (self.weight() == other.weight()):
             for i in range(len(self.list_intervals)):
@@ -334,3 +411,21 @@ class Intervals:
                 else:
                     result = True
         return result
+
+    # Проверка на вхождение в интервалс
+    def __contains__(self, item):
+        # Проверка на подходящий тип интервала
+        if not isinstance(item, (Interval, Intervals, int, float)):
+            raise TypeError('Сравнение интервала не с интервалом не возможно')
+        # Проверка интервалса в интервалсе
+        if isinstance(item, Intervals):
+            for j in item.list_intervals:
+                for i in self.list_intervals:
+                    if not i.__contains__(j):
+                        return False
+            return True
+        # Проверка интервала и числа в интервалсе
+        for i in self.list_intervals:
+            if not i.__contains__(item):
+                return False
+        return True
