@@ -141,12 +141,12 @@ class Interval:
     def __lt__(self, other) -> bool:
         # Проверка на подходящий тип интервала
         if not isinstance(other, (Interval, Intervals)):
-            raise TypeError('Сравнение интервала не с интервалом не возможно')
+            raise TypeError('Сравнение интервала не с интервалом невозможно')
         obj = other
         # Проверка на длину интервалса
         if isinstance(other, Intervals):
             if len(other.list_intervals) > 1:
-                return True
+                raise ValueError('Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно')
             else:
                 obj = other.list_intervals[0]
         # Проверка на уменьшение интервала

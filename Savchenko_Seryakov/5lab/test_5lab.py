@@ -196,31 +196,115 @@ class TestInterval(unittest.TestCase):
         self.assertTrue(inter1 == inter2)
 
     # False
-    def test_interval_eq_otrezok(self):
+    def test_otrezok_eq_interval(self):
         inter1 = interval.Interval('[0, 11]')
         inter2 = interval.Interval('(0, 11)')
         self.assertFalse(inter1 == inter2)
 
-    def test_interval_eq_pol_otrezok(self):
+    def test_otrezok_eq_pol_otrezok(self):
         inter1 = interval.Interval('[0, 11]')
         inter2 = interval.Interval('(0, 11]')
         self.assertFalse(inter1 == inter2)
 
-    def test_interval_eq_pol_interval(self):
+    def test_otrezok_eq_pol_interval(self):
         inter1 = interval.Interval('[0, 11]')
         inter2 = interval.Interval('[0, 11)')
         self.assertFalse(inter1 == inter2)
 
-    def test_interval_eq_point(self):
+    def test_otrezok_eq_point(self):
         inter1 = interval.Interval('[0, 11]')
         inter2 = interval.Interval('{11}')
         self.assertFalse(inter1 == inter2)
 
-    def test_otrezok_eq_interval(self):
+    def test_interval_eq_otrezok(self):
         inter1 = interval.Interval('(0, 11)')
         inter2 = interval.Interval('[0, 11]')
         self.assertFalse(inter1 == inter2)
 
+    def test_interval_eq_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 11)')
+        inter2 = interval.Interval('(0, 11]')
+        self.assertFalse(inter1 == inter2)
+
+    def test_interval_eq_pol_interval(self):
+        inter1 = interval.Interval('(0, 11)')
+        inter2 = interval.Interval('[0, 11)')
+        self.assertFalse(inter1 == inter2)
+
+    def test_interval_eq_point(self):
+        inter1 = interval.Interval('(0, 11)')
+        inter2 = interval.Interval('{11}')
+        self.assertFalse(inter1 == inter2)
+
+    # Test <
+    # True
+    def test_interval_and_interval(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('(1, 7)')
+        self.assertTrue(inter1 < inter2)
+
+    def test_interval_and_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('[1, 7]')
+        self.assertTrue(inter1 < inter2)
+
+    def test_otrezok_and_otrezok(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('[1, 7]')
+        self.assertTrue(inter1 < inter2)
+
+    def test_otrezok_and_otrezok_eq_l_border(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[0, 7]')
+        self.assertTrue(inter1 < inter2)
+
+    # TODO добавить тесты, когда один из интервалов одинарный интервалс
+    # def test_interval_and_intervals(self):
+    #     inter1 = interval.Interval('(0, 5)')
+    #     inter2 = interval.Interval('[[1, 7]]')
+    #     self.assertTrue(inter1 < inter2)
+
+
+    # False
+    def test_interval_and_interval(self):
+        inter1 = interval.Interval('(1, 7)')
+        inter2 = interval.Interval('(0, 5)')
+        self.assertFalse(inter1 < inter2)
+
+    def test_otrezok_and_otrezok_eq_l_border(self):
+        inter1 = interval.Interval('[1, 7]')
+        inter2 = interval.Interval('[0, 5]')
+        self.assertFalse(inter1 < inter2)
+
+    def test_otrezok_and_otrezok_eq_l_border(self):
+        inter1 = interval.Interval('[0, 7)')
+        inter2 = interval.Interval('[0, 5]')
+        self.assertFalse(inter1 < inter2)
+
+    # TODO добавить тесты, когда один из интервалов одинарный интервалс
+    # def test_interval_and_intervals2(self):
+    #     inter1 = interval.Interval('(0, 5)')
+    #     inter2 = interval.Interval('[(1, 7), [9, 12]]')
+    #     self.assertFalse(inter1 < inter2)
+    def test_interval_and_intervals2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Interval('[(1, 7), [9, 12]]')
+            self.assertTrue(inter1 < inter2)
+        except ValueError as e:
+            self.assertEqual(e.args, ('Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно',))
+        except:
+            self.assertTrue(False)
+
+
+    # Ошибки
+
+
+    # Test +
+    # True
+
+
+    # False
     """
     def test_isupper(self):
         self.assertTrue('FOO'.isupper())
