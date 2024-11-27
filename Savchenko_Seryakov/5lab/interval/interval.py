@@ -39,6 +39,9 @@ class Interval:
         # Поиск левого числа
         a = ''
         i = 1
+        if interval_str[i] == '-':
+            a = '-'
+            i += 1
         while interval_str[i].isnumeric() or interval_str[i] == '.':
             a += interval_str[i]
             i += 1
@@ -65,7 +68,9 @@ class Interval:
 
         # Поиск второго числа
         a = ''
-        while i < len(interval_str) and interval_str[i].isnumeric() or interval_str[i] == '.':
+        if interval_str[i - 1] == '-':
+            a = '-'
+        while i < len(interval_str) and (interval_str[i].isnumeric() or interval_str[i] == '.'):
             a += interval_str[i]
             i += 1
 
@@ -100,13 +105,10 @@ class Interval:
                 return f'{self.left_bracket}{int(self.left_border)}{self.right_bracket}'
             return f'{self.left_bracket}{self.left_border}{self.right_bracket}'
         else:
-            if self.left_border.is_integer() and self.right_border.is_integer():
-                return f'{self.left_bracket}{int(self.left_border)}, {int(self.right_border)}{self.right_bracket}'
-            elif self.left_border.is_integer() and not self.right_border.is_integer():
-                return f'{self.left_bracket}{int(self.left_border)}, {self.right_border}{self.right_bracket}'
-            elif not self.left_border.is_integer() and self.right_border.is_integer():
-                return f'{self.left_bracket}{self.left_border}, {int(self.right_border)}{self.right_bracket}'
-            return f'{self.left_bracket}{self.left_border}, {self.right_border}{self.right_bracket}'
+            # TODO подумать над функцией
+            preti_l = int(self.left_border) if self.left_border.is_integer() else self.left_border
+            preti_r = int(self.right_border) if self.right_border.is_integer() else self.right_border
+            return f'{self.left_bracket}{preti_l}, {preti_r}{self.right_bracket}'
 
     # Преобразуем интервал в строку
     def __repr__(self) -> str:
@@ -134,8 +136,12 @@ class Interval:
                 self.right_border == obj.right_border) and (
                 self.right_bracket == obj.right_bracket):
             return True
-        else:
-            return False
+        # [11, 11] == {11}
+        if self.left_border == obj.left_border == self.right_border == obj.right_border and (
+                self.left_bracket != TypeOpenBracket.ROUND and obj.left_bracket != TypeOpenBracket.ROUND and (
+                self.right_bracket != TypeClosedBracket.ROUND and obj.right_bracket != TypeClosedBracket.ROUND)):
+            return True
+        return False
 
     # Перегрузка '<'
     def __lt__(self, other) -> bool:
@@ -146,7 +152,8 @@ class Interval:
         # Проверка на длину интервалса
         if isinstance(other, Intervals):
             if len(other.list_intervals) > 1:
-                raise ValueError('Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно')
+                raise ValueError(
+                    'Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно')
             else:
                 obj = other.list_intervals[0]
         # Проверка на уменьшение интервала
@@ -162,7 +169,7 @@ class Interval:
         # Если левые границы интервалов равны
         if self.left_border == other.left_border:
             s = ''
-            if self.left_bracket == other.right_bracket == TypeOpenBracket.ROUND:
+            if self.left_bracket == other.left_bracket == TypeOpenBracket.ROUND:
                 s = '('
             else:
                 s = '['
@@ -173,7 +180,7 @@ class Interval:
                 s += str(other.right_border) + other.right_bracket.value
             else:
                 s += str(other.right_border)
-                if self.left_bracket == other.right_bracket == TypeOpenBracket.ROUND:
+                if self.right_bracket == other.right_bracket == TypeClosedBracket.ROUND:
                     s += other.right_bracket.value
                 else:
                     s += ']'
@@ -191,7 +198,16 @@ class Interval:
             if self.right_bracket != TypeClosedBracket.ROUND or other.left_bracket != TypeOpenBracket.ROUND:
                 if self.left_border == other.left_border == self.right_border == other.right_border:
                     return [Interval('{' + str(self.left_border) + '}')]
-                return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
+                if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
+                    return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
+                elif self.left_bracket == TypeOpenBracket.CURLY:
+                    return [Interval('[' + str(self.left_border) + ', ' +
+                                 str(other.right_border) + other.right_bracket.value)]
+                elif other.right_bracket == TypeClosedBracket.CURLY:
+                    return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
+                                 str(other.right_border) + ']')]
+                return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
+                                 str(other.right_border) + other.right_bracket.value)]
             else:
                 return [self, other]
         return [self, other]
@@ -214,7 +230,7 @@ class Interval:
         obj.append(self)
 
         # Сортировка листа по увеличению
-        sorted(obj)
+        obj = sorted(obj)
 
         # Сложение интервалов поэлементно с листом
         result = [obj[0]]
@@ -291,6 +307,8 @@ class Intervals:
         self.__parser(interval_str)
 
     # Парсер строки в интервалс
+    # [(9, 10), [20, 30]] ~ (9, 10) и [20, 30]
+    # {1, 3, 6, 10} ~ {1} {3}
     def __parser(self, intervals_srt: str) -> None:
         new_intervals_srt = ''
         # Предобработка входной строки
@@ -320,11 +338,11 @@ class Intervals:
                 j = 1
                 while j < len(part) - 1:
                     s = ''
-                    while not part[j].isnumeric():
+                    while part[j].isnumeric() or part[j] == '.':
                         s += part[j]
                         j += 1
                     self.list_intervals.append(Interval('{' + s + '}'))
-                    while part[j].isnumeric():
+                    while j < len(part) and not part[j].isnumeric():
                         j += 1
             else:
                 self.list_intervals.append(Interval(part))
@@ -380,6 +398,8 @@ class Intervals:
         output_inter = self.list_intervals[0].__repr__()
         for i in range(1, len(self.list_intervals)):
             output_inter += ', ' + self.list_intervals[i].__repr__()
+        if len(self.list_intervals) == 1:
+            return output_inter
         return '[' + output_inter + ']'
 
     # Преобразование в строку
