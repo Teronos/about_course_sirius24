@@ -343,11 +343,11 @@ class TestInterval(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    # TODO Intervals
-    # def test_false_contains_intervals(self):
-    #     inter1 = interval.Interval('(0, 5)')
-    #     inter2 = interval.Intervals('[(0, 5), [5, 10]]')
-    #     self.assertFalse(inter2 in inter1)
+
+    def test_false_contains_intervals(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Intervals('[(0, 5), [5, 10]]')
+        self.assertFalse(inter2 in inter1)
 
 
 
