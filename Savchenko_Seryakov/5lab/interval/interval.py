@@ -65,7 +65,7 @@ class Interval:
 
         # Поиск второго числа
         a = ''
-        while i < len(interval_str) and interval_str[i].isnumeric() or interval_str[i] == '.':
+        while i < len(interval_str) and (interval_str[i].isnumeric() or interval_str[i] == '.'):
             a += interval_str[i]
             i += 1
 
@@ -188,13 +188,26 @@ class Interval:
             return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
                              str(other.right_border) + other.right_bracket.value)]
         elif self.right_border == other.left_border:
-            if self.right_bracket != TypeClosedBracket.ROUND or other.left_bracket != TypeOpenBracket.ROUND:
+            if self.right_bracket != TypeClosedBracket.ROUND and other.left_bracket != TypeOpenBracket.ROUND:
                 if self.left_border == other.left_border == self.right_border == other.right_border:
                     return [Interval('{' + str(self.left_border) + '}')]
+                # TODO условие вывода с ошибкой
                 return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
             else:
                 return [self, other]
         return [self, other]
+
+
+        # elif self.right_border == other.left_border:
+        #     if self.right_bracket != TypeClosedBracket.ROUND or other.left_bracket != TypeOpenBracket.ROUND:
+        #         if self.left_border == other.left_border == self.right_border == other.right_border:
+        #             return [Interval('{' + str(self.left_border) + '}')]
+        #         # TODO условие вывода с ошибкой
+        #         return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
+        #     else:
+        #         return [self, other]
+        # return [self, other]
+
 
     # Сложение для интервала, интервалса и точек
     def __add__(self, other):
@@ -214,7 +227,7 @@ class Interval:
         obj.append(self)
 
         # Сортировка листа по увеличению
-        sorted(obj)
+        obj = sorted(obj)
 
         # Сложение интервалов поэлементно с листом
         result = [obj[0]]
@@ -340,7 +353,7 @@ class Intervals:
         # Проверка на подходящий тип интервала
         if not isinstance(other, (Interval, Intervals, int, float)):
             raise TypeError('Добавление интервала или точки не возможно')
-        obj = other
+        obj = [other]
 
         # Преобразование числа и интервалса в лист интервалов
         if isinstance(other, (int, float)):
@@ -355,7 +368,7 @@ class Intervals:
             obj.append(inter)
 
         # Сортировка листа по увеличению
-        sorted(obj)
+        obj = sorted(obj)
 
         # Упрощение листа интервалов
         return obj.union()
@@ -364,16 +377,15 @@ class Intervals:
     def union(self):
         intervals = []
         # Сортировка
-        sorted(self.list_intervals)
+        self.list_intervals = sorted(self.list_intervals)
         intervals.append(self.list_intervals[0])
         for inter_old in self.list_intervals[1:]:
             summ = inter_old + intervals[-1]
-            if isinstance(summ, list):
+            if isinstance(summ, Interval):
                 intervals[-1] = summ
             else:
                 intervals.append(inter_old)
-        self.list_intervals = intervals
-        return self
+        return intervals
 
     # Преобразование в строку
     def __str__(self):

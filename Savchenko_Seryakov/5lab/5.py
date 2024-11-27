@@ -339,16 +339,29 @@ class Intervals:
 """
 
 if __name__ == '__main__':
-    prom1 = Interval('[0, 10]')
-    prom2 = Interval('[0, 10]')
+    # prom1 = Interval('[0, 10]')
+    # prom2 = Interval('[0, 10]')
     # prom2 = 5
     # print('Равенство')
     # print(prom1 == prom2)
     # print('in')
     # tst = 10
     # print(tst in prom1)
-    print('+')
+    # print('+')
+    prom1 = Interval('(0, 3]')
+    prom2 = Interval('[2, 10]')
     print(prom1 + prom2)
+
+    proms1 = Intervals('[(0, 1], (1, 3], (3, 10]]')
+    print(proms1.union())
+
+
+    # # interval5 = Intervals.parser('[(0, 1), (1, 7), {10}]')
+    # interval5 = Intervals('[(0, 1), [5, 10], (1, 7), {1}, [0, 20), {5}, {100}]')
+    # print(interval5)
+    # print(type(interval5))
+    #
+    # print(interval5.union())
 
 
 
