@@ -1495,6 +1495,14 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertFalse(True)
 
+    def test_otrezok_add_interval_6(self):
+        try:
+            inter1 = interval.Interval('(12, 15)')
+            inter2 = interval.Interval('[0, 15]')
+            self.assertEqual(str(inter1 + inter2), '[0, 15]')
+        except:
+            self.assertFalse(True)
+
     def test_otrezok_add_point_1(self):
         try:
             inter1 = interval.Interval('(0, 5)')

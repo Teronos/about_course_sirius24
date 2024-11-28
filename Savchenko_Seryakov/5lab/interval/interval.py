@@ -192,37 +192,45 @@ class Interval:
             # Есть включение второго интервала в первый
             if self.right_border > other.right_border:
                 return [self]
+            elif self.right_border == other.right_border:
+                if other.right_bracket == TypeClosedBracket.SQUARE or self.right_bracket == TypeClosedBracket.SQUARE:
+                    return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
+                                 str(other.right_border) + ']')]
             return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
                              str(other.right_border) + other.right_bracket.value)]
         elif self.right_border == other.left_border:
-            if self.right_bracket != TypeClosedBracket.ROUND and other.left_bracket != TypeOpenBracket.ROUND:
-                if self.left_border == other.left_border == self.right_border == other.right_border:
-                    return [Interval('{' + str(self.left_border) + '}')]
-                if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
-                    return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
-                elif self.left_bracket == TypeOpenBracket.CURLY:
-                    return [Interval('[' + str(self.left_border) + ', ' +
-                                 str(other.right_border) + other.right_bracket.value)]
-                elif other.right_bracket == TypeClosedBracket.CURLY:
-                    return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
-                                 str(other.right_border) + ']')]
+            # Обработка нового вида точек
+            if self.left_border == other.left_border == self.right_border == other.right_border:
+                return [Interval('{' + str(self.left_border) + '}')]
+            # if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
+            #     return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
+            if self.left_bracket == TypeOpenBracket.CURLY:
+                return [Interval('[' + str(self.left_border) + ', ' +
+                             str(other.right_border) + other.right_bracket.value)]
+            elif other.right_bracket == TypeClosedBracket.CURLY:
                 return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
-                                 str(other.right_border) + other.right_bracket.value)]
+                             str(other.right_border) + ']')]
+            # Обработка персечения или объединения - [0, 5] + (5, 9)
+            if self.right_bracket == TypeClosedBracket.SQUARE or other.left_bracket == TypeOpenBracket.SQUARE:
+                return [Interval(self.left_bracket.value + str(self.left_border) + ', ' + str(other.right_border) + other.right_bracket.value)]
+
+
+            # if self.right_bracket != TypeClosedBracket.ROUND and other.left_bracket != TypeOpenBracket.ROUND:
+            #     if self.left_border == other.left_border == self.right_border == other.right_border:
+            #         return [Interval('{' + str(self.left_border) + '}')]
+            #     if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
+            #         return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
+            #     elif self.left_bracket == TypeOpenBracket.CURLY:
+            #         return [Interval('[' + str(self.left_border) + ', ' +
+            #                      str(other.right_border) + other.right_bracket.value)]
+            #     elif other.right_bracket == TypeClosedBracket.CURLY:
+            #         return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
+            #                      str(other.right_border) + ']')]
+            #     return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
+            #                      str(other.right_border) + other.right_bracket.value)]
             else:
                 return [self, other]
         return [self, other]
-
-
-        # elif self.right_border == other.left_border:
-        #     if self.right_bracket != TypeClosedBracket.ROUND or other.left_bracket != TypeOpenBracket.ROUND:
-        #         if self.left_border == other.left_border == self.right_border == other.right_border:
-        #             return [Interval('{' + str(self.left_border) + '}')]
-        #         # TODO условие вывода с ошибкой
-        #         return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
-        #     else:
-        #         return [self, other]
-        # return [self, other]
-
 
     # Сложение для интервала, интервалса и точек
     def __add__(self, other):
@@ -387,8 +395,11 @@ class Intervals:
         # Сортировка листа по увеличению
         obj = sorted(obj)
 
+        # Создание объекта Interval для выполнения упрощения
+        intervals = Intervals(str(obj))
+
         # Упрощение листа интервалов
-        return obj.union()
+        return intervals.union()
 
     # Объединение интервалов в листе
     def union(self):
@@ -402,7 +413,7 @@ class Intervals:
                 intervals[-1] = summ
             else:
                 intervals.append(inter_old)
-        return intervals
+        return Intervals(str(intervals))
 
     # Преобразование в строку
     def __str__(self):
@@ -420,6 +431,7 @@ class Intervals:
     # Вычисление ширины
     def weight(self):
         sum_weight = 0
+        self = self.union()
         for inter in self.list_intervals:
             sum_weight += inter.weight()
         return sum_weight
@@ -432,7 +444,7 @@ class Intervals:
         if isinstance(other, Interval):
             other = Intervals('[' + other.__str__() + ']')
         result = False
-        self.union()
+        self = self.union()
         other = other.union()
         if (len(self.list_intervals) == len(other.list_intervals)) and (self.weight() == other.weight()):
             for i in range(len(self.list_intervals)):
