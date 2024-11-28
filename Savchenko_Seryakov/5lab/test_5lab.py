@@ -1,6 +1,7 @@
 import unittest
 import interval
 
+
 class TestIntervalIntervals(unittest.TestCase):
 
     # Test on create and parser
@@ -71,44 +72,58 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_simple(self):
+    def test_create_list_interval_simple(self):
         try:
             inter = interval.Intervals('[0, 10]')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_multiple(self):
+    def test_create_list_interval_union(self):
         try:
             inter = interval.Intervals('[0, 5], (5, 10], [15, 20]')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_single_point(self):
+    def test_create_list_interval_one_point(self):
         try:
             inter = interval.Intervals('{5}')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_combined(self):
+    def test_create_list_interval_one_minus_point(self):
+        try:
+            inter = interval.Intervals('{-5}')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_list_interval_combination(self):
         try:
             inter = interval.Intervals('[0, 5], {10}, [15, 20]')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_floats(self):
+    def test_create_list_interval_float(self):
         try:
             inter = interval.Intervals('[0.0, 5.5], {3.3}')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_nested(self):
+    def test_create_list_interval_adds(self):
         try:
             inter = interval.Intervals('[0, 10], [10, 20]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_list_interval_with_point(self):
+        try:
+            inter = interval.Intervals('[{10}]')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
@@ -176,7 +191,7 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    # TODO Intervals
+    # Intervals
     # False
     def test_false_create_empty_list(self):
         try:
@@ -184,6 +199,33 @@ class TestIntervalIntervals(unittest.TestCase):
             self.assertTrue(False)
         except ValueError as e:
             self.assertEqual(e.args, ('Вы передали пустой список интервалов',))
+        except:
+            self.assertTrue(False)
+
+    def test_false_create_empty(self):
+        try:
+            inter = interval.Intervals('')
+            self.assertTrue(False)
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы передали пустой список интервалов',))
+        except:
+            self.assertTrue(False)
+
+    def test_false_create_list_a(self):
+        try:
+            inter = interval.Intervals('[[0, a], (12, 20)]')
+            self.assertTrue(False)
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы не передали число для интервала',))
+        except:
+            self.assertTrue(False)
+
+    def test_false_create_list_forgot_bracket(self):
+        try:
+            inter = interval.Intervals('[[0, 10, (12, 20)]')
+            self.assertTrue(False)
+        except ValueError as e:
+            self.assertEqual(e.args, ('В вашем интервале не хватает закрывающей скобки ], ) или }',))
         except:
             self.assertTrue(False)
 
@@ -210,11 +252,40 @@ class TestIntervalIntervals(unittest.TestCase):
         inter = interval.Interval('{11}')
         self.assertEqual(inter.__str__(), '{11}')
 
-    # TODO Intervals
+    # Intervals
     # True
-    def test_intervals_to_str(self):
+    def test_list_interval_to_str(self):
         inter = interval.Intervals('[[0, 11]]')
         self.assertEqual(inter.__str__(), '[0, 11]')
+
+    def test_list_interval_to_str_interval(self):
+        inter = interval.Intervals('[0, 11]')
+        self.assertEqual(inter.__str__(), '[0, 11]')
+
+    def test_list_interval_to_str_union(self):
+        inter = interval.Intervals('[[0, 5], (5, 10], {15}]')
+        self.assertEqual(inter.__str__(), '[[0, 5], (5, 10], {15}]')
+
+    def test_list_interval_to_str_one_point(self):
+        inter = interval.Intervals('{5}')
+        self.assertEqual(inter.__str__(), '{5}')
+
+    def test_list_interval_to_str_combination(self):
+        inter = interval.Intervals('[[0, 3], {5}, (6, 8]]')
+        self.assertEqual(inter.__str__(), '[[0, 3], {5}, (6, 8]]')
+
+    def test_list_interval_to_str_mush(self):
+        inter = interval.Intervals('[[0, 5], [10, 15], [20, 25]]')
+        self.assertEqual(inter.__str__(), '[[0, 5], [10, 15], [20, 25]]')
+
+    def test_list_interval_to_str_empty(self):
+        try:
+            inter = interval.Intervals('[]')
+            self.assertTrue(False)  # Если пустой интервал создается без ошибки, тест провален
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы передали пустой список интервалов',))  # Ожидаем исключение ValueError
+        except:
+            self.assertTrue(False)
 
     # Test interval to repr
     # Interval
@@ -239,11 +310,40 @@ class TestIntervalIntervals(unittest.TestCase):
         inter = interval.Interval('{11}')
         self.assertEqual(inter.__repr__(), '{11}')
 
-    # TODO Intervals
+    # Intervals
     # True
-    def test_intervals_to_repr(self):
+    def test_list_interval_to_repr(self):
         inter = interval.Intervals('[[0, 11]]')
         self.assertEqual(inter.__repr__(), '[0, 11]')
+
+    def test_list_interval_to_repr_interval(self):
+        inter = interval.Intervals('[0, 11]')
+        self.assertEqual(inter.__repr__(), '[0, 11]')
+
+    def test_list_interval_to_repr_union(self):
+        inter = interval.Intervals('[[0, 5], (5, 10], {15}]')
+        self.assertEqual(inter.__repr__(), '[[0, 5], (5, 10], {15}]')
+
+    def test_list_interval_to_repr_one_point(self):
+        inter = interval.Intervals('{5}')
+        self.assertEqual(inter.__repr__(), '{5}')
+
+    def test_list_interval_to_repr_combination(self):
+        inter = interval.Intervals('[[0, 3], {5}, (6, 8]]')
+        self.assertEqual(inter.__repr__(), '[[0, 3], {5}, (6, 8]]')
+
+    def test_list_interval_to_repr_mush(self):
+        inter = interval.Intervals('[[0, 5], [10, 15], [20, 25]]')
+        self.assertEqual(inter.__repr__(), '[[0, 5], [10, 15], [20, 25]]')
+
+    def test_list_interval_to_repr_empty(self):
+        try:
+            inter = interval.Intervals('[]')
+            self.assertTrue(False)  # Если пустой интервал создается без ошибки, тест провален
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы передали пустой список интервалов',))  # Ожидаем исключение ValueError
+        except:
+            self.assertTrue(False)
 
     # Test weight
     # Interval
@@ -268,11 +368,39 @@ class TestIntervalIntervals(unittest.TestCase):
         inter = interval.Interval('{11}')
         self.assertEqual(inter.weight(), 0)
 
-    # TODO Intervals
+    # Intervals
     # True
-    def test_weight_intervals(self):
+    def test_weight_list_interval(self):
         inter = interval.Intervals('[[0, 11]]')
         self.assertEqual(inter.weight(), 11)
+
+    def test_weight_single_list_interval(self):
+        inter = interval.Intervals('[0, 11]')
+        self.assertEqual(inter.weight(), 11)
+
+    def test_weight_mush_list_interval(self):
+        inter = interval.Intervals('[0, 5], [10, 15], [20, 25]')
+        self.assertEqual(inter.weight(), 15)
+
+    def test_weight_adds_list_interval(self):
+        inter = interval.Intervals('[0, 10], [5, 15]')
+        self.assertEqual(inter.weight(), 15)
+
+    def test_weight_union_list_interval(self):
+        inter = interval.Intervals('[0, 20], [5, 15]')
+        self.assertEqual(inter.weight(), 20)
+
+    def test_weight_single_point_list(self):
+        inter = interval.Intervals('{5}')
+        self.assertEqual(inter.weight(), 0)
+
+    def test_weight_list_interval_with_points(self):
+        inter = interval.Intervals('[0, 5], {6}, [7, 10]')
+        self.assertEqual(inter.weight(), 8)
+
+    def test_weight_list_interval_all(self):
+        inter = interval.Intervals('[0, 5], [6, 10), {12}, (15, 20]')
+        self.assertEqual(inter.weight(), 14)
 
     # Test ==
     # Interval
@@ -1287,7 +1415,8 @@ class TestIntervalIntervals(unittest.TestCase):
             inter2 = interval.Intervals('[(1, 7), [9, 12]]')
             self.assertTrue(inter1 < inter2)
         except ValueError as e:
-            self.assertEqual(e.args, ('Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно',))
+            self.assertEqual(e.args, (
+                'Сравнение интервала состоящего из нескольких промежутков с интервалом из одного промежутка невозможно',))
         except:
             self.assertTrue(False)
 
@@ -3208,6 +3337,104 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertFalse(True)
 
+    # Intervals
+    # True
+    def test_one_list_add_one_list_adds_1(self):
+        inter1 = interval.Intervals('[0, 5]')
+        inter2 = interval.Intervals('[5, 10]')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
+    def test_one_list_add_one_list_union(self):
+        inter1 = interval.Intervals('[0, 5)')
+        inter2 = interval.Intervals('(5, 10]')
+        self.assertEqual(str(inter1.__add__(inter2)), '[[0, 5), (5, 10]]')
+
+    def test_two_list_add_two_list(self):
+        inter1 = interval.Intervals('[0, 5], (15, 20]')
+        inter2 = interval.Intervals('[5, 15], (18, 22]')
+        self.assertEqual(str(inter1 + inter2), '[0, 22]')
+
+    def test_one_list_add_two_list(self):
+        inter1 = interval.Intervals('[0, 20]')
+        inter2 = interval.Intervals('[5, 10], (10, 15]')
+        self.assertEqual(str(inter1 + inter2), '[0, 20]')
+
+    def test_one_list_add_two_list_union(self):
+        inter1 = interval.Intervals('[0, 20]')
+        inter2 = interval.Intervals('[5, 10], (10, 15]')
+        self.assertEqual(str(inter1 + inter2), '[0, 20]')
+
+    def test_one_list_add_one_list_1(self):
+        inter1 = interval.Intervals('[0, 5]')
+        inter2 = interval.Intervals('[10, 15]')
+        self.assertEqual(str(inter1 + inter2), '[[0, 5], [10, 15]]')
+
+    def test_one_list_add_one_list_adds_2(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Intervals('[5, 15]')
+        self.assertEqual(str(inter1 + inter2), '[0, 15]')
+
+    def test_one_list_add_point(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Interval('{5}')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
+    def test_one_list_add_point_union(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Interval('{15}')
+        self.assertEqual(str(inter1 + inter2), '[[0, 10], {15}]')
+
+    # TODO посмотреть точки вместе
+    def test_point_add_point(self):
+        inter1 = interval.Intervals('{5}')
+        inter2 = interval.Intervals('{10}')
+        self.assertEqual(str(inter1 + inter2), '[{5}, {10}]')
+
+    def test_one_list_add_point_adds(self):
+        inter1 = interval.Intervals('[0, 5)')
+        inter2 = interval.Interval('{5}')
+        self.assertEqual(str(inter1 + inter2), '[0, 5]')
+
+    def test_one_list_add_one_list_adds_3(self):
+        inter1 = interval.Intervals('[0, 20]')
+        inter2 = interval.Intervals('[5, 10]')
+        self.assertEqual(str(inter1 + inter2), '[0, 20]')
+
+    def test_one_list_add_one_list_2(self):
+        inter1 = interval.Intervals('[0, 5]')
+        inter2 = interval.Intervals('[10, 15]')
+        self.assertEqual(str(inter1 + inter2), '[[0, 5], [10, 15]]')
+
+    def test_two_list_add_two_list_adds(self):
+        inter1 = interval.Intervals('[0, 5], [10, 15]')
+        inter2 = interval.Intervals('[5, 10], [12, 20]')
+        self.assertEqual(str(inter1 + inter2), '[0, 20]')
+
+    def test_one_list_otrezok_add_one_list_interval(self):
+        inter1 = interval.Intervals('(0, 5)')
+        inter2 = interval.Intervals('[5, 10]')
+        self.assertEqual(str(inter1 + inter2), '(0, 10]')
+
+    def test_one_list_add_one_list_float(self):
+        inter1 = interval.Intervals('[0.0, 5.5]')
+        inter2 = interval.Intervals('[5.5, 10.0]')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
+    def test_one_list_add_one_list_adds_4(self):
+        inter1 = interval.Intervals('[0, 100]')
+        inter2 = interval.Intervals('[50, 150]')
+        self.assertEqual(str(inter1 + inter2), '[0, 150]')
+
+    def test_one_list_add_one_list_adds_5(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Intervals('[0, 10]')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
+    def test_one_list_add_one_list_adds_6(self):
+        inter1 = interval.Intervals('[0, 5]')
+        inter2 = interval.Intervals('[5, 10]')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
     # Interval
     # False
     def test_false_add_str(self):
@@ -3219,9 +3446,16 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    # TODO Intervals
-    # True
+    # Intervals
     # False
+    def test_one_list_add_str(self):
+        try:
+            inter1 = interval.Intervals('[0, 5]')
+            self.assertEqual(str(inter1 + '[5, 10]'), '[0, 10]')
+        except TypeError as e:
+            self.assertEqual(e.args, ('Добавление интервала или точки не возможно',))
+        except:
+            self.assertTrue(False)
 
     # Test in
     # Interval
@@ -3342,10 +3576,33 @@ class TestIntervalIntervals(unittest.TestCase):
         inter2 = interval.Interval('(2, 4)')
         self.assertTrue(inter2 in inter1)
 
-
-    # TODO Intervals
+    # Intervals
     # True
+    def test_int_in_list_interval_1(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertTrue(5 in inter)
 
+    def test_interval_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10]]')
+        sub_inter = interval.Interval('[2, 8]')
+        self.assertTrue(sub_inter in inter)
+
+    def test_int_in_list_interval_2(self):
+        inter = interval.Intervals('[[0, 10], {15}]')
+        self.assertTrue(15 in inter)
+
+    def test_list_interval_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
+        sub_inter = interval.Intervals('[[3, 7], [16, 18]]')
+        self.assertTrue(sub_inter in inter)
+
+    def test_start_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertTrue(0 in inter)
+
+    def test_end_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertTrue(10 in inter)
 
     # Interval
     # False
@@ -3475,13 +3732,173 @@ class TestIntervalIntervals(unittest.TestCase):
         inter2 = interval.Interval('(-2, -1)')
         self.assertFalse(inter2 in inter1)
 
-
-    # TODO Intervals
+    # Intervals
     # False
-    def test_false_contains_intervals(self):
+    def test_false_list_interval_in_interval(self):
         inter1 = interval.Interval('(0, 5)')
         inter2 = interval.Intervals('[(0, 5), [5, 10]]')
         self.assertFalse(inter2 in inter1)
+
+    def test_false_int_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertFalse(15 in inter)
+
+    def test_false_interval_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10]]')
+        sub_inter = interval.Interval('[11, 20]')
+        self.assertFalse(sub_inter in inter)
+
+    def test_false_int_in_list_interval_before(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertFalse(-1 in inter)
+
+    def test_false_int_in_list_interval_after(self):
+        inter = interval.Intervals('[[0, 10]]')
+        self.assertFalse(11 in inter)
+
+    def test_false_list_interval_in_list_interval(self):
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
+        sub_inter = interval.Intervals('[[12, 14]]')
+        self.assertFalse(sub_inter in inter)
+
+    def test_false_int_in_two_list_interval(self):
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
+        self.assertFalse(12 in inter)
+
+    # Test is_equal
+    # Intervals
+    # True
+    def test_list_interval_equal_list_interval(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Intervals('[0, 10]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_two_list_interval_equal_two_list_interval(self):
+        inter1 = interval.Intervals('[0, 5], [10, 15]')
+        inter2 = interval.Intervals('[10, 15], [0, 5]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_two_list_interval_equal_list_interval(self):
+        inter1 = interval.Intervals('[0, 15]')
+        inter2 = interval.Intervals('[0, 10], [10, 15]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_point_equal_point(self):
+        inter1 = interval.Intervals('{5}')
+        inter2 = interval.Intervals('{5}')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_list_interval_point_equal_point_list_interval(self):
+        inter1 = interval.Intervals('[0, 5], {10}')
+        inter2 = interval.Intervals('{10}, [0, 5]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_list_interval_equal_two_list_interval(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Intervals('[0, 5], [5, 10]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    # Intervals
+    # False
+    def test_false_list_interval_equal_list_interval(self):
+        inter1 = interval.Intervals('[0, 10]')
+        inter2 = interval.Intervals('[0, 11]')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    def test_false_two_list_interval_equal_two_list_interval(self):
+        inter1 = interval.Intervals('[0, 5], [10, 15]')
+        inter2 = interval.Intervals('[10, 15], [0, 6]')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    def test_false_two_list_interval_equal_list_interval(self):
+        inter1 = interval.Intervals('[0, 15]')
+        inter2 = interval.Intervals('[0, 10], [10, 13]')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    def test_false_point_equal_point(self):
+        inter1 = interval.Intervals('{5}')
+        inter2 = interval.Intervals('{3}')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    def test_false_list_interval_point_equal_point_list_interval(self):
+        inter1 = interval.Intervals('[0, 5], {10}')
+        inter2 = interval.Intervals('{4}, [0, 5]')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    def test_false_list_interval_equal_two_list_interval(self):
+        inter1 = interval.Intervals('[0, 6]')
+        inter2 = interval.Intervals('[0, 5], [5, 10]')
+        self.assertFalse(inter1.is_equal(inter2))
+
+    # Test union
+    # Intervals
+    # True
+    def test_list_interval_union(self):
+        inter = interval.Intervals('[[0, 5]]')
+        self.assertEqual(str(inter.union()), '[0, 5]')
+
+    def test_list_otrezok_union(self):
+        inter = interval.Intervals('[(0, 5)]')
+        self.assertEqual(str(inter.union()), '(0, 5)')
+
+    def test_list_pol_otrezok_union(self):
+        inter = interval.Intervals('[(0, 1], (1, 3], (3, 10]]')
+        self.assertEqual(str(inter.union()), '(0, 10]')
+
+    def test_list_pol_otrezok_interval_union(self):
+        inter = interval.Intervals('[(0, 5], [5, 10]]')
+        self.assertEqual(str(inter.union()), '(0, 10]')
+
+    def test_two_list_interval_union(self):
+        inter = interval.Intervals('[[0, 5], [6, 10]]')
+        self.assertEqual(str(inter.union()), '[[0, 5], [6, 10]]')
+
+    def test_tree_list_interval_union(self):
+        inter = interval.Intervals('[[0, 5], [6, 10], [0, 15]]')
+        self.assertEqual(str(inter.union()), '[0, 15]')
+
+    def test_list_interval_all_union(self):
+        inter = interval.Intervals('[[0, 15], (0, 7], [6, 10], (12, 15)]')
+        self.assertEqual(str(inter.union()), '[0, 15]')
+
+    def test_list_interval_point_union(self):
+        inter = interval.Intervals('[[0, 5), (5, 10], {10}]')
+        self.assertEqual(str(inter.union()), '[[0, 5), (5, 10]]')
+
+    def test_list_interval_points_union(self):
+        inter = interval.Intervals('[(0, 1), (1, 7), (7, 10], {0, 1, 7}]')
+        self.assertEqual(str(inter.union()), '[0, 10]')
+
+    def test_list_interval_all_point_union(self):
+        inter = interval.Intervals('[(0, 1), [5, 10], [0, 20), (1, 7), {1}')
+        self.assertEqual(str(inter.union()), '[0, 20)')
+
+    # Test in example
+    def test_one_example(self):
+        inter1 = interval.Intervals('[(0, 1), (1, 7), (7, 10]]')
+        inter2 = interval.Intervals('{0, 1, 7}')
+        self.assertEqual(str(inter1 + inter2), '[0, 10]')
+
+    def test_two_example(self):
+        inter1 = interval.Intervals('[5, 6]')
+        inter2 = interval.Intervals('(-2, 4)')
+        self.assertEqual(str(inter1 + inter2), '[(-2, 4), [5, 6]]')
+
+    def test_tree_example(self):
+        inter1 = interval.Intervals('(0, 12)')
+        inter2 = interval.Intervals('[(-2, 1), (7, 10]]')
+        self.assertEqual(str(inter1 + inter2), '(-2, 12)')
+
+    def test_four_example(self):
+        inter1 = interval.Intervals('(1, 5), (5, 7), [5, 5], [7, 7]')
+        self.assertEqual(str(inter1.union()), '(1, 7]')
+
+    def test_five_example(self):
+        inter1 = interval.Intervals('{1, 3, 7}')
+        inter2 = interval.Intervals('(0, 1)')
+        self.assertEqual(str(inter1 + inter2), '[(0, 1], {3}, {7}]')
+
+    # Test after prosent
 
 
 if __name__ == '__main__':

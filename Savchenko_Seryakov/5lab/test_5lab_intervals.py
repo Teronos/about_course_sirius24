@@ -55,7 +55,7 @@ class TestIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    def test_create_intervals_single_point(self):
+    def test_create_intervals_single_minus_point(self):
         try:
             inter = interval.Intervals('{-5}')
             self.assertTrue(True)
