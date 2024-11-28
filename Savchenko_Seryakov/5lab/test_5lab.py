@@ -3903,3 +3903,11 @@ class TestIntervalIntervals(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    """
+    После проверки работы всех тестов, необходимо проверить процент проверки кода, для этого необходимо сделать следующие команды:
+    pip install coverage - для установки пакета (только один раз)
+    python -m coverage run -m unittest - фиксация прохождения тестов
+    python -m coverage report - сбор информации о прохождении тестов по коду
+    python -m coverage html - отображение в читаемом виде (html)
+    Далее в папке htmlcov открыть файл index.html в браузере и проанализировать полученный результат
+    """
