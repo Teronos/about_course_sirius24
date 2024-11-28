@@ -3377,7 +3377,7 @@ class TestIntervalIntervals(unittest.TestCase):
     def test_false_point_in_otrezok(self):
         inter1 = interval.Interval('(0, 5]')
         inter2 = interval.Interval('{-3}')
-        self.assertTrue(inter2 in inter1)
+        self.assertFalse(inter2 in inter1)
 
     def test_false_int_in_interval(self):
         inter1 = interval.Interval('[0, 5]')

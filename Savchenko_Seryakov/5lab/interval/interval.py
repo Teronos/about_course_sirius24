@@ -358,7 +358,7 @@ class Intervals:
                 j = 1
                 while j < len(part) - 1:
                     s = ''
-                    while part[j].isnumeric() or part[j] == '.':
+                    while part[j].isnumeric() or part[j] == '.' or part[j] == '-':
                         s += part[j]
                         j += 1
                     self.list_intervals.append(Interval('{' + s + '}'))
@@ -463,11 +463,15 @@ class Intervals:
         if isinstance(item, Intervals):
             for j in item.list_intervals:
                 for i in self.list_intervals:
-                    if not i.__contains__(j):
+                    if i.__contains__(j):
+                        break
+                    if i == self.list_intervals[-1]:
                         return False
             return True
+
         # Проверка интервала и числа в интервалсе
         for i in self.list_intervals:
-            if not i.__contains__(item):
-                return False
-        return True
+            if i.__contains__(item):
+                return True
+        return False
+
