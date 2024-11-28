@@ -41,11 +41,74 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
-    # TODO Intervals
+    # Intervals
     # True
     def test_create_list_interval(self):
         try:
             inter = interval.Intervals('[[0, 10]]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_list_interval_forgot_bracket(self):
+        try:
+            inter = interval.Intervals('[0, 10]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_list_interval_two(self):
+        try:
+            inter = interval.Intervals('[[0, 10], (12, 20)]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_list_interval_much(self):
+        try:
+            inter = interval.Intervals('[[0, 10], (12, 20), [22, 27), (30, 32]]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_simple(self):
+        try:
+            inter = interval.Intervals('[0, 10]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_multiple(self):
+        try:
+            inter = interval.Intervals('[0, 5], (5, 10], [15, 20]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_single_point(self):
+        try:
+            inter = interval.Intervals('{5}')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_combined(self):
+        try:
+            inter = interval.Intervals('[0, 5], {10}, [15, 20]')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_floats(self):
+        try:
+            inter = interval.Intervals('[0.0, 5.5], {3.3}')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
+    def test_create_intervals_nested(self):
+        try:
+            inter = interval.Intervals('[0, 10], [10, 20]')
             self.assertTrue(True)
         except:
             self.assertTrue(False)
@@ -2249,10 +2312,905 @@ class TestIntervalIntervals(unittest.TestCase):
 
     # Interval + Intervals
     # True
+    def test_otrezok_add_list_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(3, 7)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 7)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5), (5, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, 0), (0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5), (5, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_otrezok_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[(-3, -1]]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, -1], (0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_interval_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_interval_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[3, 4)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_interval_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 9)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_interval_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[[-3, 0), (0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_pol_interval_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5), [6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_interval_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_interval_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_interval_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_interval_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_interval_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[[6, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5), [6, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_point_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[{5}]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_point_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[{4}]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_point_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[{9}]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5), {9}]')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_point_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[{0}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_otrezok_add_list_point_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5)')
+            inter2 = interval.Intervals('[{-3}]')
+            self.assertEqual(str(inter1 + inter2), '[{-3}, (0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(3, 7)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 7)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5], (6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, 0), (0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(-3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_otrezok_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[(-3, -1]]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, -1], (0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_interval_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_interval_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[3, 4)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_interval_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '(0, 9)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_interval_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[[-3, 0), (0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_pol_interval_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5], [6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_interval_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_interval_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_interval_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '(0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_interval_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_interval_5(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[[6, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5], [6, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_point_1(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[{0}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_point_2(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[{4}]')
+            self.assertEqual(str(inter1 + inter2), '(0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_point_3(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[{9}]')
+            self.assertEqual(str(inter1 + inter2), '[(0, 5], {9}]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_otrezok_add_list_point_4(self):
+        try:
+            inter1 = interval.Interval('(0, 5]')
+            inter2 = interval.Intervals('[{-3}]')
+            self.assertEqual(str(inter1 + inter2), '[{-3}, (0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(3, 7)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 7)')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9)')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_otrezok_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[(-3, -1]]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, -1], [0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_interval_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_interval_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[3, 4)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_interval_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9)')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_interval_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_pol_interval_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5], [6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_interval_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_interval_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_interval_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_interval_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_interval_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[[6, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5], [6, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_point_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[{5}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_point_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[{4}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_point_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[{9}]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5], {9}]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_point_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[{0}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_list_point_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5]')
+            inter2 = interval.Intervals('[{-3}]')
+            self.assertEqual(str(inter1 + inter2), '[{-3}, [0, 5]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(3, 7)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 7)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5), (6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(-3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5), (5, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_otrezok_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[(-3, -1]]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, -1], [0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_interval_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_interval_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[3, 4)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_interval_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_interval_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_pol_interval_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5), [6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_interval_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_interval_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_interval_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 9]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_interval_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '[-3, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_interval_5(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[[6, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5), [6, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_point_1(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[{0}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_point_2(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[{4}]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_point_3(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[{9}]')
+            self.assertEqual(str(inter1 + inter2), '[[0, 5), {9}]')
+        except:
+            self.assertFalse(True)
+
+    def test_pol_interval_add_list_point_4(self):
+        try:
+            inter1 = interval.Interval('[0, 5)')
+            inter2 = interval.Intervals('[{-3}]')
+            self.assertEqual(str(inter1 + inter2), '[{-3}, [0, 5)]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5)')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('{7}')
+            inter2 = interval.Intervals('[(3, 7)]')
+            self.assertEqual(str(inter1 + inter2), '(3, 7]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(6, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[{0}, (6, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('{5}')
+            inter2 = interval.Intervals('[(-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, 0), {5}]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_otrezok_5(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(-1, 6)]')
+            self.assertEqual(str(inter1 + inter2), '(-1, 6)')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_otrezok_1(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_otrezok_2(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(-3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '(-3, 4]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_otrezok_3(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[(5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[{0}, (5, 9]]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_otrezok_4(self):
+        try:
+            inter1 = interval.Interval('{10}')
+            inter2 = interval.Intervals('[(-3, 0]]')
+            self.assertEqual(str(inter1 + inter2), '[(-3, 0], {10}]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_interval_1(self):
+        try:
+            inter1 = interval.Interval('{5}')
+            inter2 = interval.Intervals('[[0, 5)]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_interval_2(self):
+        try:
+            inter1 = interval.Interval('{3}')
+            inter2 = interval.Intervals('[[2, 4)]')
+            self.assertEqual(str(inter1 + inter2), '[2, 4)')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_interval_3(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[[5, 9)]')
+            self.assertEqual(str(inter1 + inter2), '[{0}, [5, 9)]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_pol_interval_4(self):
+        try:
+            inter1 = interval.Interval('{10}')
+            inter2 = interval.Intervals('[[-3, 0)]')
+            self.assertEqual(str(inter1 + inter2), '[[-3, 0), {10}]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_interval_1(self):
+        try:
+            inter1 = interval.Interval('{2}')
+            inter2 = interval.Intervals('[[0, 5]]')
+            self.assertEqual(str(inter1 + inter2), '[0, 5]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_interval_2(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[[3, 4]]')
+            self.assertEqual(str(inter1 + inter2), '[{0}, [3, 4]]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_interval_3(self):
+        try:
+            inter1 = interval.Interval('{10}')
+            inter2 = interval.Intervals('[[5, 9]]')
+            self.assertEqual(str(inter1 + inter2), '[[5, 9], {10}]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_point_1(self):
+        try:
+            inter1 = interval.Interval('{0}')
+            inter2 = interval.Intervals('[{10}]')
+            self.assertEqual(str(inter1 + inter2), '[{0}, {10}]')
+        except:
+            self.assertFalse(True)
+
+    def test_point_add_list_point_2(self):
+        try:
+            inter1 = interval.Interval('{10}')
+            inter2 = interval.Intervals('[{4}]')
+            self.assertEqual(str(inter1 + inter2), '[{4}, {10}]')
+        except:
+            self.assertFalse(True)
 
     # Interval
     # False
-    def test_false_add_type(self):
+    def test_false_add_str(self):
         try:
             inter1 = interval.Interval('(0, 5)')
             self.assertEqual(str(inter1 + '(1, 7)'), '[(0, 7)]')
@@ -2261,11 +3219,135 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
+    # TODO Intervals
+    # True
+    # False
 
     # Test in
+    # Interval
+    # True
+    def test_point_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('{0}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_point_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('{0}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_point_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('{5}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_point_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('{4}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_int_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        self.assertTrue(3 in inter1)
+
+    def test_int_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        self.assertTrue(3 in inter1)
+
+    def test_int_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        self.assertTrue(3 in inter1)
+
+    def test_int_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        self.assertTrue(3 in inter1)
+
+    def test_pol_interval_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('[0, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_interval_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[0, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_interval_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('[2, 5)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_interval_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('[2, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_interval_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('[2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_interval_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_interval_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('[2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_interval_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('[2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_otrezok_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('(2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_otrezok_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('(2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_otrezok_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('(2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_pol_otrezok_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('(2, 3]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_otrezok_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('(2, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_otrezok_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('(2, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_otrezok_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('(2, 4)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_otrezok_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('(2, 4)')
+        self.assertTrue(inter2 in inter1)
+
+
+    # TODO Intervals
     # True
 
 
+    # Interval
     # False
     def test_false_contains_type(self):
         try:
@@ -2277,13 +3359,130 @@ class TestIntervalIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
+    def test_false_point_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('{-3}')
+        self.assertFalse(inter2 in inter1)
 
+    def test_false_point_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('{-3}')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_point_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('{-3}')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_point_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('{-3}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_false_int_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        self.assertFalse(-3 in inter1)
+
+    def test_false_int_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        self.assertFalse(-3 in inter1)
+
+    def test_false_int_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        self.assertFalse(-3 in inter1)
+
+    def test_false_int_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        self.assertFalse(-3 in inter1)
+
+    def test_false_pol_interval_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('[-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_interval_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_interval_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('[-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_interval_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('[-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_interval_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('[-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_interval_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('[-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_interval_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('[-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_interval_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('[-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_otrezok_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('(-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_otrezok_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('(-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_otrezok_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('(-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_pol_otrezok_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('(-2, -1]')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_otrezok_in_interval(self):
+        inter1 = interval.Interval('[0, 5]')
+        inter2 = interval.Interval('(-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_otrezok_in_pol_interval(self):
+        inter1 = interval.Interval('[0, 5)')
+        inter2 = interval.Interval('(-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_otrezok_in_pol_otrezok(self):
+        inter1 = interval.Interval('(0, 5]')
+        inter2 = interval.Interval('(-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+    def test_false_otrezok_in_otrezok(self):
+        inter1 = interval.Interval('(0, 5)')
+        inter2 = interval.Interval('(-2, -1)')
+        self.assertFalse(inter2 in inter1)
+
+
+    # TODO Intervals
+    # False
     def test_false_contains_intervals(self):
         inter1 = interval.Interval('(0, 5)')
         inter2 = interval.Intervals('[(0, 5), [5, 10]]')
         self.assertFalse(inter2 in inter1)
 
-    # Intervals
 
 if __name__ == '__main__':
     unittest.main()
