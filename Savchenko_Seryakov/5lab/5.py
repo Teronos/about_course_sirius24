@@ -338,6 +338,15 @@ class Intervals:
         return result
 """
 
+def gjgj(item, slf):
+    # Проверка интервалса в интервалсе
+    if isinstance(item, Intervals):
+        for j in item.list_intervals:
+            for i in slf.list_intervals:
+                if not i.__contains__(j):
+                    return False
+        return True
+
 if __name__ == '__main__':
     # prom1 = Interval('[0, 10]')
     # prom2 = Interval('[0, 10]')
@@ -358,11 +367,11 @@ if __name__ == '__main__':
     # print(proms1)
     # # print(proms1.union())
 
+    item = interval.Intervals('[[3, 7], [16, 18]]')
+    slf = interval.Intervals('[[0, 10], [15, 20]]')
+    print(gjgj(item, slf))
 
-    prom1 = Intervals('[[0, 5]]')
-    prom2 = Intervals('[[0, 5]]')
-    print(prom1 == prom2)
-
+    # tuy = str(inter1 + inter2) # '[{-3}, [0, 5]]'
 
     # # interval5 = Intervals.parser('[(0, 1), (1, 7), {10}]')
     # interval5 = Intervals('[(0, 1), [5, 10], (1, 7), {1}, [0, 20), {5}, {100}]')

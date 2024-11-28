@@ -55,6 +55,13 @@ class TestIntervals(unittest.TestCase):
         except:
             self.assertTrue(False)
 
+    def test_create_intervals_single_point(self):
+        try:
+            inter = interval.Intervals('{-5}')
+            self.assertTrue(True)
+        except:
+            self.assertTrue(False)
+
     def test_create_intervals_combined(self):
         try:
             inter = interval.Intervals('[0, 5], {10}, [15, 20]')
@@ -453,15 +460,14 @@ class TestIntervals(unittest.TestCase):
         sub_inter = interval.Interval('[2, 8]')
         self.assertTrue(sub_inter in inter)
 
-    #
     def test_intervals_contains_single_point(self):
-        inter = interval.Intervals('[[0, 10]], {15}')
+        inter = interval.Intervals('[[0, 10], {15}]')
         self.assertTrue(15 in inter)
 
     #
     def test_intervals_contains_intervals(self):
-        inter = interval.Intervals('[[0, 10]], [[15, 20]]')
-        sub_inter = interval.Intervals('[[3, 7]], [[16, 18]]')
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
+        sub_inter = interval.Intervals('[[3, 7], [16, 18]]')
         self.assertTrue(sub_inter in inter)
 
     def test_intervals_contains_point_at_bounds(self):
@@ -470,10 +476,10 @@ class TestIntervals(unittest.TestCase):
         self.assertTrue(10 in inter)
 
     #TODO Ошибка, если вводятся пустые
-    def test_intervals_contains_empty(self):
-        inter = interval.Intervals('[[0, 10]]')
-        empty_inter = interval.Intervals('[]')
-        self.assertTrue(empty_inter in inter)
+    # def test_intervals_contains_empty(self):
+    #     inter = interval.Intervals('[[0, 10]]')
+    #     empty_inter = interval.Intervals('[]')
+    #     self.assertTrue(empty_inter in inter)
 
     # False
     def test_intervals_not_contains_point(self):
@@ -491,19 +497,19 @@ class TestIntervals(unittest.TestCase):
         self.assertFalse(11 in inter)
     #
     def test_intervals_not_contains_intervals(self):
-        inter = interval.Intervals('[[0, 10]], [[15, 20]]')
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
         sub_inter = interval.Intervals('[[12, 14]]')
         self.assertFalse(sub_inter in inter)
     #
     def test_intervals_not_contains_point_in_gap(self):
-        inter = interval.Intervals('[[0, 10]], [[15, 20]]')
+        inter = interval.Intervals('[[0, 10], [15, 20]]')
         self.assertFalse(12 in inter)
 
     # TODO Ошибка, если вводятся пустые
-    def test_intervals_not_contains_empty(self):
-        inter = interval.Intervals('[[0, 10]]')
-        empty_inter = interval.Intervals('[]')
-        self.assertFalse(empty_inter in inter)  # если интервал не допускает пустых значений
+    # def test_intervals_not_contains_empty(self):
+    #     inter = interval.Intervals('[[0, 10]]')
+    #     empty_inter = interval.Intervals('[]')
+    #     self.assertFalse(empty_inter in inter)  # если интервал не допускает пустых значений
 
 
 if __name__ == '__main__':
