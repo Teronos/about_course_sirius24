@@ -114,7 +114,7 @@ class TestIntervals(unittest.TestCase):
             inter = interval.Intervals('[[0, a], (12, 20)]')
             self.assertTrue(False)
         except ValueError as e:
-            self.assertEqual(e.args, ('Вы не передали число для интервала',))
+            self.assertEqual(e.args, ('Вы не передали второе число для интервала',))
         except:
             self.assertTrue(False)
 

@@ -58,13 +58,13 @@ class Interval:
             self.right_border = self.left_border
             return
 
-        # Поиск начала числа
+        # Поиск начала второго числа
         while i < len(interval_str) and not interval_str[i].isnumeric():
             i += 1
 
         # Обработка отсутствия правого числа
         if i == len(interval_str):
-            raise ValueError('Вы не передали число для интервала')
+            raise ValueError('Вы не передали второе число для интервала')
 
         # Поиск второго числа
         a = ''
@@ -73,10 +73,6 @@ class Interval:
         while i < len(interval_str) and (interval_str[i].isnumeric() or interval_str[i] == '.'):
             a += interval_str[i]
             i += 1
-
-        # Обработка отсутствия правого числа
-        if a == '':
-            raise ValueError('Вы не передали второе число для интервала')
 
         # Заполнение правого числа
         self.right_border = float(a)
@@ -174,9 +170,7 @@ class Interval:
             else:
                 s = '['
             s += str(self.left_border) + ', '
-            if self.right_border > other.right_border:
-                s += str(self.right_border) + self.right_bracket.value
-            elif self.right_border < other.right_border:
+            if self.right_border < other.right_border:
                 s += str(other.right_border) + other.right_bracket.value
             else:
                 s += str(other.right_border)
@@ -200,34 +194,12 @@ class Interval:
                              str(other.right_border) + other.right_bracket.value)]
         elif self.right_border == other.left_border:
             # Обработка нового вида точек
-            if self.left_border == other.left_border == self.right_border == other.right_border:
-                return [Interval('{' + str(self.left_border) + '}')]
-            # if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
-            #     return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
-            if self.left_bracket == TypeOpenBracket.CURLY:
-                return [Interval('[' + str(self.left_border) + ', ' +
-                             str(other.right_border) + other.right_bracket.value)]
-            elif other.right_bracket == TypeClosedBracket.CURLY:
+            if other.right_bracket == TypeClosedBracket.CURLY:
                 return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
                              str(other.right_border) + ']')]
             # Обработка персечения или объединения - [0, 5] + (5, 9)
             if self.right_bracket == TypeClosedBracket.SQUARE or other.left_bracket == TypeOpenBracket.SQUARE:
                 return [Interval(self.left_bracket.value + str(self.left_border) + ', ' + str(other.right_border) + other.right_bracket.value)]
-
-
-            # if self.right_bracket != TypeClosedBracket.ROUND and other.left_bracket != TypeOpenBracket.ROUND:
-            #     if self.left_border == other.left_border == self.right_border == other.right_border:
-            #         return [Interval('{' + str(self.left_border) + '}')]
-            #     if self.left_bracket == TypeOpenBracket.CURLY and other.right_bracket == TypeClosedBracket.CURLY:
-            #         return [Interval('[' + str(self.left_border) + ', ' + str(other.right_border) + ']')]
-            #     elif self.left_bracket == TypeOpenBracket.CURLY:
-            #         return [Interval('[' + str(self.left_border) + ', ' +
-            #                      str(other.right_border) + other.right_bracket.value)]
-            #     elif other.right_bracket == TypeClosedBracket.CURLY:
-            #         return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
-            #                      str(other.right_border) + ']')]
-            #     return [Interval(self.left_bracket.value + str(self.left_border) + ', ' +
-            #                      str(other.right_border) + other.right_bracket.value)]
             else:
                 return [self, other]
         return [self, other]
@@ -296,7 +268,7 @@ class Interval:
                             item.right_bracket == TypeClosedBracket.ROUND))
                 else:
                     return self.right_border > item.right_border
-            return False
+            return self == item
         else:
             if self.right_border < item.left_border:
                 return False
@@ -306,8 +278,6 @@ class Interval:
                 return self.right_bracket == TypeClosedBracket.SQUARE or (
                         self.right_bracket == TypeClosedBracket.ROUND and (
                         item.right_bracket == TypeClosedBracket.ROUND))
-            else:
-                return False
 
 
 """
@@ -348,7 +318,7 @@ class Intervals:
             while i < len(new_intervals_srt) and new_intervals_srt[i] not in [
                 TypeClosedBracket.CURLY.value, TypeClosedBracket.ROUND.value, TypeClosedBracket.SQUARE.value]:
                 i += 1
-            if new_intervals_srt[i] not in [TypeClosedBracket.CURLY.value,
+            if i == len(new_intervals_srt) or new_intervals_srt[i] not in [TypeClosedBracket.CURLY.value,
                                             TypeClosedBracket.ROUND.value, TypeClosedBracket.SQUARE.value]:
                 raise ValueError('Вы забыли закрывающую скобку ), ] или }')
             part = new_intervals_srt[:i + 1]
@@ -440,7 +410,7 @@ class Intervals:
     def is_equal(self, other):
         # Проверка на подходящий тип интервала
         if not isinstance(other, (Interval, Intervals)):
-            raise TypeError('Не возможно проверить на эквивалентность интервал ' + str(type(other)))
+            raise TypeError('Не возможно проверить на эквивалентность интервала с ' + str(type(other)))
         if isinstance(other, Interval):
             other = Intervals('[' + other.__str__() + ']')
         result = False
