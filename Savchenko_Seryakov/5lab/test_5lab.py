@@ -162,7 +162,7 @@ class TestIntervalIntervals(unittest.TestCase):
             inter = interval.Interval('(10, ')
             self.assertTrue(False)
         except ValueError as e:
-            self.assertEqual(e.args, ('Вы не передали число для интервала',))
+            self.assertEqual(e.args, ('Вы не передали второе число для интервала',))
         except:
             self.assertTrue(False)
 
@@ -171,7 +171,7 @@ class TestIntervalIntervals(unittest.TestCase):
             inter = interval.Interval('(10, a')
             self.assertTrue(False)
         except ValueError as e:
-            self.assertEqual(e.args, ('Вы не передали число для интервала',))
+            self.assertEqual(e.args, ('Вы не передали второе число для интервала',))
         except:
             self.assertTrue(False)
 
@@ -216,7 +216,7 @@ class TestIntervalIntervals(unittest.TestCase):
             inter = interval.Intervals('[[0, a], (12, 20)]')
             self.assertTrue(False)
         except ValueError as e:
-            self.assertEqual(e.args, ('Вы не передали число для интервала',))
+            self.assertEqual(e.args, ('Вы не передали второе число для интервала',))
         except:
             self.assertTrue(False)
 
@@ -248,7 +248,7 @@ class TestIntervalIntervals(unittest.TestCase):
         inter = interval.Interval('(0, 11]')
         self.assertEqual(inter.__str__(), '(0, 11]')
 
-    def test_point_to_str(self):
+    def test_int_point_to_str(self):
         inter = interval.Interval('{11}')
         self.assertEqual(inter.__str__(), '{11}')
 
@@ -3516,7 +3516,7 @@ class TestIntervalIntervals(unittest.TestCase):
         inter2 = interval.Interval('[2, 4)')
         self.assertTrue(inter2 in inter1)
 
-    def test_interval_in_interval(self):
+    def test_interval_in_interval_1(self):
         inter1 = interval.Interval('[0, 5]')
         inter2 = interval.Interval('[2, 3]')
         self.assertTrue(inter2 in inter1)
@@ -3556,7 +3556,7 @@ class TestIntervalIntervals(unittest.TestCase):
         inter2 = interval.Interval('(2, 3]')
         self.assertTrue(inter2 in inter1)
 
-    def test_otrezok_in_interval(self):
+    def test_otrezok_in_interval_1(self):
         inter1 = interval.Interval('[0, 5]')
         inter2 = interval.Interval('(2, 4)')
         self.assertTrue(inter2 in inter1)
@@ -3899,6 +3899,84 @@ class TestIntervalIntervals(unittest.TestCase):
         self.assertEqual(str(inter1 + inter2), '[(0, 1], {3}, {7}]')
 
     # Test after prosent
+    def test_float_point_to_str(self):
+        inter = interval.Interval('{1.1}')
+        self.assertEqual(inter.__str__(), '{1.1}')
+
+    def test_point_add_int_1(self):
+        inter1 = interval.Interval('{5}')
+        self.assertEqual(str(inter1 + 5), '{5}')
+
+    def test_false_empty_second_number(self):
+        try:
+            inter1 = interval.Interval('[5, a]')
+            self.assertFalse(True)
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы не передали второе число для интервала',))
+        except:
+            self.assertFalse(True)
+
+    def test_interval_add_point(self):
+        inter1 = interval.Interval('[5, 7]')
+        inter2 = interval.Interval('{5}')
+        self.assertEqual(str(inter2 + inter1), '[5, 7]')
+
+    def test_otrezok_in_interval_2(self):
+        inter1 = interval.Interval('[5, 5]')
+        inter2 = interval.Interval('(5, 5)')
+        self.assertTrue(inter2 in inter1)
+
+    def test_interval_in_interval_2(self):
+        inter1 = interval.Interval('[5, 5]')
+        inter2 = interval.Interval('[5, 5]')
+        self.assertTrue(inter2 in inter1)
+
+    def test_point_in_point(self):
+        inter1 = interval.Interval('{5}')
+        inter2 = interval.Interval('{5}')
+        self.assertTrue(inter2 in inter1)
+
+    def test_false_point_in_point(self):
+        inter1 = interval.Interval('{5}')
+        inter2 = interval.Interval('{4}')
+        self.assertFalse(inter2 in inter1)
+
+    def test_create_list_interval_forgot_brackets(self):
+        try:
+            inter = interval.Intervals('[(12, 20')
+            self.assertTrue(False)
+        except ValueError as e:
+            self.assertEqual(e.args, ('Вы забыли закрывающую скобку ), ] или }',))
+        except:
+            self.assertTrue(False)
+
+    def test_list_interval_add_int(self):
+        inter1 = interval.Intervals('[5, 8]')
+        self.assertEqual(str(inter1 + 9), '[[5, 8], {9}]')
+
+    def test_false_list_interval_equal_str(self):
+        other = 'as'
+        try:
+            inter1 = interval.Intervals('[5, 8]')
+            self.assertFalse(inter1.is_equal(other))
+        except TypeError as e:
+            self.assertEqual(e.args, ('Не возможно проверить на эквивалентность интервала с ' + str(type(other)), ))
+        except:
+            self.assertFalse(True)
+
+    def test_list_interval_equal_interval(self):
+        inter1 = interval.Intervals('[5, 8]')
+        inter2 = interval.Interval('[5, 8]')
+        self.assertTrue(inter1.is_equal(inter2))
+
+    def test_false_str_in_list_interval(self):
+        try:
+            inter1 = interval.Intervals('[5, 8]')
+            self.assertTrue('8' in inter1)
+        except TypeError as e:
+            self.assertEqual(e.args, ('Сравнение интервала не с интервалом не возможно',))
+        except:
+            self.assertFalse(True)
 
 
 if __name__ == '__main__':
