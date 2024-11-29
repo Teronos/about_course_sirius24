@@ -335,7 +335,7 @@ class Intervals:
         if intervals_srt[0] == TypeOpenBracket.CURLY.value:
             new_intervals_srt = intervals_srt
         else:
-            if intervals_srt[1].isnumeric():
+            if intervals_srt[1].isnumeric() or intervals_srt[1] == '-':
                 new_intervals_srt = intervals_srt
             else:
                 new_intervals_srt = intervals_srt[1:]
