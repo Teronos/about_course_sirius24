@@ -29,7 +29,7 @@ func convert(arr [][]int) []int{
 
         // left line
         for i := N - 2; i > shift; i--{
-            ans = append(ans, arr[i][0])
+            ans = append(ans, arr[i][shift])
         }
 
         shift++
