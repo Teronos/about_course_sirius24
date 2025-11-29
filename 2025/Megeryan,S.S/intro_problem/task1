@@ -1,0 +1,31 @@
+Задача 1: Дано трехзначное число. Найдите сумму его цифр.
+
+Пример ввода: 745
+
+Пример вывода: 16 
+
+Решение:
+def sum_digits(n):
+    return sum(int(digit) for digit in str(n))
+
+input_number = 123
+output = sum_digits(input_number)
+print(output)  # Вывод: 6
+
+
+Задача 1*: Дано пятизначное число. Найдите произведение его цифр.
+
+Пример ввода: 14962
+
+Пример вывода: 432
+
+Решение:
+def mlt_digits(n):
+    product = 1
+    for digit in str(n):
+        product *= int(digit)
+    return product
+
+input_number = 12345
+output = mlt_digits(input_number)
+print(output)  # Вывод: 120
