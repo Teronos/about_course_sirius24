@@ -1,0 +1,43 @@
+Задача 2 Дано трехзначное число. Переверните его, а затем выведите.
+
+Пример ввода:
+
+843
+
+Пример вывода:
+
+348
+
+Решение:
+def reverse_number(n):
+    return int(str(n)[::-1])
+
+input_number = 123
+output = reverse_number(input_number)
+print(output)  # Вывод: 321
+
+Задача 2*
+Дано шестизначное число. Найдите суммы его четных и нечетных элементов. Образуйте из них этих сумм оддно числ ои выведите его на экран
+
+Пример ввода:
+
+531893
+
+Пример вывода:
+
+1514
+
+Решение:
+def sum_even_odd_digits(n):
+    even_sum = 0
+    odd_sum = 0
+    for digit in str(n):
+        if int(digit) % 2 == 0:
+            even_sum += int(digit)
+        else:
+            odd_sum += int(digit)
+    return int(str(even_sum) + str(odd_sum))
+
+input_number = 123456
+output = sum_even_odd_digits(input_number)
+print(output)  # Вывод: 129
